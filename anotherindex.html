@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherAbode · Full Zillow® replica</title>
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* premium zillow-grade polish */
+    body { background: #f4f6f9; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .glass-nav { background: rgba(255,255,255,0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .shadow-soft { box-shadow: 0 8px 30px rgba(0,0,0,0.02); }
+    .card-hover { transition: all 0.25s cubic-bezier(0.2, 0, 0, 1); border: 1px solid #edf2f7; }
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 25px 40px -16px rgba(0,20,50,0.18); border-color: #d0dcec; }
+    .btn-primary { background: #006aff; transition: 0.15s; }
+    .btn-primary:hover { background: #004bb5; transform: scale(1.01); }
+    .badge-pulse { animation: pulse-ring 2.5s infinite; }
+    @keyframes pulse-ring { 0% { opacity: 0.9; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
+    .img-cover { background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .agent-ring { box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(0,106,255,0.12); }
+    .gradient-text { background: linear-gradient(145deg, #0b1d3a, #1f3d6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tab-active { border-bottom: 3px solid #006aff; color: #006aff; font-weight: 600; }
+    .tab-inactive { color: #4d637f; border-bottom: 3px solid transparent; }
+    .stat-card { background: white; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid #eef2f6; }
+    /* custom scroll */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c1c9d6; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a0aaba; }
+  </style>
+</head>
+<body>
+
+<!-- ========== TOP NAV (full Zillow replica) ========== -->
+<header class="glass-nav sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+      <!-- logo -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-[#006aff] text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-blue-500/20">A</div>
+        <span class="text-2xl font-bold tracking-tight gradient-text">Aether<span class="text-[#006aff]">Abode</span></span>
+      </div>
+      <!-- nav links (desktop) -->
+      <nav class="hidden lg:flex items-center gap-6 font-medium text-[#2d3e5f]">
+        <a href="#" class="flex items-center gap-2 hover:text-[#006aff] transition border-b-2 border-transparent hover:border-[#006aff] pb-1"><i class="fas fa-home text-[#006aff]"></i> Buy</a>
+        <a href="#" class="flex items-center gap-2 hover:text-[#006aff] transition border-b-2 border-transparent hover:border-[#006aff] pb-1"><i class="fas fa-key text-[#006aff]"></i> Rent</a>
+        <a href="#" class="flex items-center gap-2 hover:text-[#006aff] transition border-b-2 border-transparent hover:border-[#006aff] pb-1"><i class="fas fa-chart-line text-[#006aff]"></i> Sell</a>
+        <a href="#" class="flex items-center gap-2 hover:text-[#006aff] transition border-b-2 border-transparent hover:border-[#006aff] pb-1"><i class="fas fa-user-tie text-[#006aff]"></i> Agent Finder</a>
+        <a href="#" class="flex items-center gap-2 hover:text-[#006aff] transition border-b-2 border-transparent hover:border-[#006aff] pb-1"><i class="fas fa-home text-[#006aff]"></i> Manage Rentals</a>
+        <a href="#" class="flex items-center gap-2 hover:text-[#006aff] transition border-b-2 border-transparent hover:border-[#006aff] pb-1"><i class="fas fa-hand-holding-usd text-[#006aff]"></i> Home Loans</a>
+      </nav>
+      <!-- right actions -->
+      <div class="flex items-center gap-3 sm:gap-5">
+        <button class="hidden sm:inline-flex text-[#2d3e5f] hover:text-[#006aff] transition text-lg"><i class="far fa-heart"></i></button>
+        <button class="hidden sm:inline-flex text-[#2d3e5f] hover:text-[#006aff] transition text-lg"><i class="far fa-bell"></i></button>
+        <a href="#" class="btn-primary text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-md shadow-blue-500/20 flex items-center gap-2"><i class="fas fa-user-circle"></i> Sign in</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== HERO + SEARCH (Zillow-style) ========== -->
+<section class="bg-gradient-to-b from-[#eef4ff] to-[#f5f7fb] px-4 py-10 md:py-20 relative overflow-hidden">
+  <div class="max-w-5xl mx-auto text-center relative z-10">
+    <span class="inline-block bg-white/80 backdrop-blur-sm text-[#006aff] text-xs font-bold tracking-wider px-4 py-1.5 rounded-full border border-white/60 shadow-sm mb-5"><i class="fas fa-bolt mr-1.5"></i> LIVE · 2,340+ ACTIVE LISTINGS</span>
+    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight text-[#0b1d3a]">Find your <span class="text-[#006aff]">perfect</span> place</h1>
+    <p class="text-lg md:text-xl text-[#3d526f] max-w-2xl mx-auto mt-4 mb-8">Search millions of homes, rentals, and real estate insights — all in one place.</p>
+    <!-- search box -->
+    <div class="flex flex-col sm:flex-row bg-white rounded-2xl shadow-2xl shadow-blue-500/10 border border-white/80 p-1.5 max-w-3xl mx-auto">
+      <div class="flex-1 flex items-center px-4 py-1.5">
+        <i class="fas fa-search text-[#006aff] opacity-70 mr-3"></i>
+        <input type="text" placeholder="📍 Address, city, or ZIP" value="Austin, TX" class="w-full py-3 outline-none bg-transparent text-[#1a2a4a] font-medium placeholder-[#9aabc0] rounded-xl" />
+      </div>
+      <button class="btn-primary text-white font-semibold px-8 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"><i class="fas fa-arrow-right"></i> Search</button>
+    </div>
+    <!-- secondary CTA -->
+    <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+      <a href="#" class="bg-white/70 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/50 shadow-sm hover:shadow-md transition flex items-center gap-2 text-[#0b1d3a] font-medium"><i class="fas fa-calculator text-[#006aff]"></i> See what you can afford</a>
+      <a href="#" class="bg-white/70 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/50 shadow-sm hover:shadow-md transition flex items-center gap-2 text-[#0b1d3a] font-medium"><i class="fas fa-map-pin text-[#006aff]"></i> Explore neighborhoods</a>
+    </div>
+  </div>
+  <!-- decorative blobs -->
+  <div class="absolute -top-20 -right-20 w-72 h-72 bg-[#006aff] opacity-[0.04] rounded-full blur-3xl"></div>
+  <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-[#0b1d3a] opacity-[0.02] rounded-full blur-3xl"></div>
+</section>
+
+<!-- ========== FILTER PILLS (Buy/Rent toggle) ========== -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 relative z-20">
+  <div class="flex flex-wrap items-center gap-2 bg-white rounded-2xl shadow-sm border border-[#e4e7ec] p-2 md:p-3">
+    <button id="tabBuy" class="tab-active px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2"><i class="fas fa-home"></i> Buy</button>
+    <button id="tabRent" class="tab-inactive px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2"><i class="fas fa-key"></i> Rent</button>
+    <div class="flex-1"></div>
+    <div class="flex flex-wrap items-center gap-2 text-xs text-[#4d637f]">
+      <span class="flex items-center gap-1 bg-[#f0f4fe] px-3 py-1.5 rounded-full"><i class="fas fa-bed"></i> Beds</span>
+      <span class="flex items-center gap-1 bg-[#f0f4fe] px-3 py-1.5 rounded-full"><i class="fas fa-bath"></i> Baths</span>
+      <span class="flex items-center gap-1 bg-[#f0f4fe] px-3 py-1.5 rounded-full"><i class="fas fa-dollar-sign"></i> Price</span>
+      <span class="flex items-center gap-1 bg-[#006aff] text-white px-4 py-1.5 rounded-full font-medium">Apply</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- SECTION: Listings (dynamic grid) -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-[#0b1d3a] flex items-center gap-2"><i class="fas fa-list-ul text-[#006aff]"></i> <span id="listingTitle">Homes for sale</span></h2>
+    <a href="#" class="text-[#006aff] font-medium hover:underline text-sm">View all 247 <i class="fas fa-arrow-right"></i></a>
+  </div>
+
+  <!-- Grid Container for Buy/Rent toggle -->
+  <div id="listingGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- cards will be injected by JS -->
+  </div>
+
+  <!-- ========== SECTION: EXPLORE MARKETS (City cards) ========== -->
+  <section class="mt-16">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-[#0b1d3a] flex items-center gap-2"><i class="fas fa-globe-americas text-[#006aff]"></i> Explore popular markets</h2>
+      <a href="#" class="text-[#006aff] font-medium hover:underline text-sm">See all <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="bg-white rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a]">Austin</span><span class="block text-xs text-[#5a6e8a]">$560K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +6.2%</span></div>
+      <div class="bg-white rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a]">NYC</span><span class="block text-xs text-[#5a6e8a]">$780K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +4.1%</span></div>
+      <div class="bg-white rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a]">LA</span><span class="block text-xs text-[#5a6e8a]">$980K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +5.8%</span></div>
+      <div class="bg-white rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a]">Miami</span><span class="block text-xs text-[#5a6e8a]">$620K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +7.9%</span></div>
+      <div class="bg-white rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a]">Denver</span><span class="block text-xs text-[#5a6e8a]">$580K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +3.4%</span></div>
+      <div class="bg-white rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a]">Seattle</span><span class="block text-xs text-[#5a6e8a]">$750K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +4.9%</span></div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION: MARKET TRENDS & STATS ========== -->
+  <section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="stat-card"><i class="fas fa-chart-line text-3xl text-[#006aff] mb-2"></i><h3 class="font-bold text-xl">$408,500</h3><p class="text-sm text-[#5a6e8a]">Median home value</p><span class="text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +3.2% YoY</span></div>
+    <div class="stat-card"><i class="fas fa-clock text-3xl text-[#006aff] mb-2"></i><h3 class="font-bold text-xl">32 days</h3><p class="text-sm text-[#5a6e8a]">Median days on market</p><span class="text-xs text-[#5a6e8a]">⬇️ 4 days faster than last year</span></div>
+    <div class="stat-card"><i class="fas fa-percent text-3xl text-[#006aff] mb-2"></i><h3 class="font-bold text-xl">98.7%</h3><p class="text-sm text-[#5a6e8a]">Listing price received</p><span class="text-xs text-green-600 font-semibold">⬆️ Strong seller market</span></div>
+  </section>
+
+  <!-- ========== SECTION: AGENT FINDER ========== -->
+  <section class="mt-16">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-[#0b1d3a] flex items-center gap-2"><i class="fas fa-user-tie text-[#006aff]"></i> Find a top agent</h2>
+      <a href="#" class="text-[#006aff] font-medium hover:underline text-sm">See all <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div class="bg-white p-5 rounded-2xl shadow-soft border border-[#edf2f7] flex items-start gap-4 card-hover">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-16 h-16 rounded-full object-cover agent-ring" alt="agent" />
+        <div><h4 class="font-bold">Elena V.</h4><p class="text-xs text-[#5a6e8a]">Premier agent · 12 yrs</p><div class="flex text-yellow-400 text-xs mt-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p class="text-xs text-[#006aff] font-medium mt-1">4.9 (147 reviews)</p></div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl shadow-soft border border-[#edf2f7] flex items-start gap-4 card-hover">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 rounded-full object-cover agent-ring" alt="agent" />
+        <div><h4 class="font-bold">Marcus L.</h4><p class="text-xs text-[#5a6e8a]">Luxury specialist</p><div class="flex text-yellow-400 text-xs mt-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="text-xs text-[#006aff] font-medium mt-1">5.0 (203 reviews)</p></div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl shadow-soft border border-[#edf2f7] flex items-start gap-4 card-hover">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-16 h-16 rounded-full object-cover agent-ring" alt="agent" />
+        <div><h4 class="font-bold">Sophia K.</h4><p class="text-xs text-[#5a6e8a]">Elite director · 15 yrs</p><div class="flex text-yellow-400 text-xs mt-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="text-xs text-[#006aff] font-medium mt-1">5.0 (98 reviews)</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION: HOME LOANS / MORTGAGE ========== -->
+  <section class="mt-16 bg-gradient-to-r from-[#0b1d3a] to-[#1f3d6b] rounded-3xl p-8 md:p-12 text-white shadow-2xl shadow-blue-900/20">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+      <div>
+        <h3 class="text-2xl md:text-3xl font-bold flex items-center gap-3"><i class="fas fa-hand-holding-usd text-[#ffd966]"></i> AetherAbode Home Loans</h3>
+        <p class="text-blue-200/90 max-w-lg mt-1">Check rates, calculate payments, and get pre‑approved in minutes.</p>
+        <div class="flex flex-wrap gap-4 mt-4">
+          <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm border border-white/10"><span class="font-bold">6.8%</span> 30‑yr fixed</span>
+          <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm border border-white/10"><span class="font-bold">6.1%</span> 15‑yr fixed</span>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+        <button id="calcBtn" class="bg-white text-[#0b1d3a] font-semibold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2"><i class="fas fa-calculator"></i> Calculate payment</button>
+        <button class="border border-white/30 text-white font-medium px-6 py-3.5 rounded-full hover:bg-white/10 transition flex items-center justify-center gap-2"><i class="fas fa-pen"></i> Get pre‑approved</button>
+      </div>
+    </div>
+    <!-- hidden calculator (simple) -->
+    <div id="calcPanel" class="mt-6 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hidden transition-all">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-white">
+        <div><label class="text-sm text-blue-200">Home price</label><input type="number" value="450000" class="w-full bg-white/20 rounded-lg px-3 py-2 border border-white/10 text-white font-medium" id="homePrice" /></div>
+        <div><label class="text-sm text-blue-200">Down payment %</label><input type="number" value="20" class="w-full bg-white/20 rounded-lg px-3 py-2 border border-white/10 text-white font-medium" id="downPayment" /></div>
+        <div><label class="text-sm text-blue-200">Rate %</label><input type="number" step="0.1" value="6.8" class="w-full bg-white/20 rounded-lg px-3 py-2 border border-white/10 text-white font-medium" id="interestRate" /></div>
+      </div>
+      <div class="mt-4 flex justify-between items-center">
+        <span class="text-white font-medium">Estimated monthly payment: <span id="monthlyPayment" class="text-2xl font-bold text-[#ffd966]">$2,342</span></span>
+        <button id="closeCalc" class="bg-white/20 hover:bg-white/30 text-white px-5 py-2 rounded-full text-sm transition">Close</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========== FOOTER (full Zillow replica) ========== -->
+<footer class="bg-[#0b1a2f] text-[#cbd5e1] pt-16 pb-8 mt-10 border-t border-[#1f3a5f]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-10">
+      <div><h4 class="text-white font-semibold text-lg mb-4">AetherAbode</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">About</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Careers</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Investors</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Press</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Buy</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Homes for sale</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Open houses</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">New construction</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Coming soon</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Rent</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Apartments</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Houses</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Manage rentals</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Loans</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Mortgage rates</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Refinance</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Home equity</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Connect</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition"><i class="fab fa-instagram mr-2"></i> Instagram</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition"><i class="fab fa-twitter mr-2"></i> Twitter</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition"><i class="fab fa-youtube mr-2"></i> YouTube</a></div>
+    </div>
+    <div class="mt-12 pt-8 border-t border-[#1f3a5f] text-center text-sm text-[#7f96b3] flex flex-wrap justify-center gap-x-6 gap-y-2">
+      <span><i class="fas fa-copyright mr-1.5"></i> 2026 AetherAbode Real Estate</span>
+      <span>·</span>
+      <span>Data sourced from local MLS</span>
+      <span>·</span>
+      <span><i class="fas fa-shield-alt mr-1"></i> Verified listings</span>
+      <span>·</span>
+      <span>Privacy policy</span>
+      <span>·</span>
+      <span>Terms of use</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== JAVASCRIPT (full interactivity) ========== -->
+<script>
+  (function() {
+    // ----- DATA -----
+    const buyListings = [
+      { img: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$875,000', change: '+6.2%', address: '1207 Parkview Dr, Austin, TX 78704', beds: 4, baths: 3.5, sqft: 2870, built: 2021, agent: 'Elena V.', agentImg: 'https://randomuser.me/api/portraits/women/44.jpg', badge: 'For sale' },
+      { img: 'https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$2,450,000', change: '+8.1%', address: '4 Cliffside Ln, Malibu, CA 90265', beds: 5, baths: 5, sqft: 4920, built: 2019, agent: 'Marcus L.', agentImg: 'https://randomuser.me/api/portraits/men/32.jpg', badge: 'Open house' },
+      { img: 'https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$1,125,000', change: '+7.4%', address: '8500 Bay Harbor Dr, Miami, FL 33141', beds: 4, baths: 3, sqft: 2540, built: 2023, agent: 'Derek P.', agentImg: 'https://randomuser.me/api/portraits/men/75.jpg', badge: 'New' },
+      { img: 'https://images.pexels.com/photos/280221/pexels-photo-280221.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$1,980,000', change: '+9.0%', address: '7 Aspen Ridge, Boulder, CO 80304', beds: 4, baths: 4.5, sqft: 3650, built: 2018, agent: 'Nina R.', agentImg: 'https://randomuser.me/api/portraits/women/21.jpg', badge: 'For sale' },
+      { img: 'https://images.pexels.com/photos/280219/pexels-photo-280219.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$550,000', change: '+4.7%', address: '2404 Cherry St, Denver, CO 80205', beds: 3, baths: 2, sqft: 1620, built: 1926, agent: 'James C.', agentImg: 'https://randomuser.me/api/portraits/men/52.jpg', badge: 'Featured' },
+      { img: 'https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$3,200,000', change: '+11.2%', address: '12 Bel Air Rd, Los Angeles, CA 90077', beds: 6, baths: 6.5, sqft: 6200, built: 2022, agent: 'Sophia K.', agentImg: 'https://randomuser.me/api/portraits/women/68.jpg', badge: 'Virtual tour' }
+    ];
+    const rentListings = [
+      { img: 'https://images.pexels.com/photos/280219/pexels-photo-280219.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$2,800/mo', change: '+3.1%', address: '1201 High St, Denver, CO 80203', beds: 2, baths: 2, sqft: 1100, built: 2015, agent: 'Emily R.', agentImg: 'https://randomuser.me/api/portraits/women/33.jpg', badge: 'Available now' },
+      { img: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$3,900/mo', change: '+5.2%', address: '90 Pearl St, Austin, TX 78701', beds: 3, baths: 2.5, sqft: 1800, built: 2020, agent: 'Tom H.', agentImg: 'https://randomuser.me/api/portraits/men/45.jpg', badge: 'Open house' },
+      { img: 'https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$4,500/mo', change: '+4.8%', address: '22 Ocean Ave, Miami, FL 33139', beds: 3, baths: 3, sqft: 2100, built: 2021, agent: 'Luis G.', agentImg: 'https://randomuser.me/api/portraits/men/22.jpg', badge: 'Just listed' }
+    ];
+
+    const grid = document.getElementById('listingGrid');
+    const title = document.getElementById('listingTitle');
+    const tabBuy = document.getElementById('tabBuy');
+    const tabRent = document.getElementById('tabRent');
+
+    function renderCards(data, type) {
+      grid.innerHTML = '';
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl overflow-hidden shadow-soft card-hover';
+        card.innerHTML = `
+          <div class="relative h-56 img-cover" style="background-image: url('${item.img}');">
+            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-white/10"><i class="fas fa-tag mr-1.5"></i> ${item.badge}</span>
+            <button class="heart-btn absolute top-4 right-4 w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#b0b9c9] hover:text-red-500 transition shadow-lg"><i class="far fa-heart"></i></button>
+            <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/20 to-transparent"></div>
+          </div>
+          <div class="p-5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-2xl font-bold text-[#0b1d3a]">${item.price} <span class="text-sm font-normal text-[#5a6e8a] ml-1">${item.change}</span></span>
+              <span class="text-xs bg-[#eef5ff] text-[#006aff] px-2.5 py-1 rounded-full font-medium"><i class="far fa-clock mr-1"></i> ${Math.floor(Math.random()*10)+1} days</span>
+            </div>
+            <p class="font-semibold text-[#1f334f] mt-1.5 truncate">${item.address}</p>
+            <div class="flex gap-4 text-sm text-[#3d526f] mt-2"><span><i class="fas fa-bed text-[#006aff] w-4"></i> ${item.beds}</span><span><i class="fas fa-bath text-[#006aff] w-4"></i> ${item.baths}</span><span><i class="fas fa-vector-square text-[#006aff] w-4"></i> ${item.sqft} sqft</span></div>
+            <div class="flex flex-wrap gap-3 text-xs text-[#3f5679] mt-1.5"><span><i class="fas fa-calendar-alt text-[#006aff] w-4"></i> Built ${item.built}</span></div>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-[#eef2f6]">
+              <div class="flex items-center gap-2.5">
+                <img src="${item.agentImg}" class="w-9 h-9 rounded-full object-cover agent-ring" alt="agent" />
+                <div><p class="text-sm font-semibold text-[#1a2a4a]">${item.agent}</p><p class="text-[10px] text-[#6b7e9b]">${type === 'buy' ? 'Premier agent' : 'Rental specialist'}</p></div>
+              </div>
+              <div class="text-xs text-[#4d637f]"><i class="fas fa-home text-[#006aff] mr-1"></i> ${type === 'buy' ? 'Single family' : 'Apartment'}</div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      // attach heart listeners
+      document.querySelectorAll('.heart-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const icon = this.querySelector('i');
+          icon.classList.toggle('far');
+          icon.classList.toggle('fas');
+          icon.classList.toggle('text-red-500');
+        });
+      });
+    }
+
+    // initial render
+    renderCards(buyListings, 'buy');
+    title.innerText = 'Homes for sale';
+
+    // Tab switching
+    tabBuy.addEventListener('click', function() {
+      this.className = 'tab-active px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      tabRent.className = 'tab-inactive px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      renderCards(buyListings, 'buy');
+      title.innerText = 'Homes for sale';
+    });
+    tabRent.addEventListener('click', function() {
+      this.className = 'tab-active px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      tabBuy.className = 'tab-inactive px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      renderCards(rentListings, 'rent');
+      title.innerText = 'Rental properties';
+    });
+
+    // ----- MORTGAGE CALCULATOR -----
+    const calcBtn = document.getElementById('calcBtn');
+    const calcPanel = document.getElementById('calcPanel');
+    const closeCalc = document.getElementById('closeCalc');
+    const homePrice = document.getElementById('homePrice');
+    const downPayment = document.getElementById('downPayment');
+    const interestRate = document.getElementById('interestRate');
+    const monthlyPayment = document.getElementById('monthlyPayment');
+
+    function updateMortgage() {
+      const price = parseFloat(homePrice.value) || 450000;
+      const down = parseFloat(downPayment.value) || 20;
+      const rate = parseFloat(interestRate.value) || 6.8;
+      const loanAmount = price * (1 - down / 100);
+      const monthlyRate = rate / 100 / 12;
+      const months = 30 * 12;
+      if (monthlyRate === 0) { monthlyPayment.innerText = '$' + (loanAmount / months).toFixed(0); return; }
+      const x = Math.pow(1 + monthlyRate, months);
+      const payment = loanAmount * monthlyRate * x / (x - 1);
+      monthlyPayment.innerText = '$' + payment.toFixed(0);
+    }
+
+    calcBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      calcPanel.classList.toggle('hidden');
+      updateMortgage();
+    });
+    closeCalc.addEventListener('click', function() { calcPanel.classList.add('hidden'); });
+    homePrice.addEventListener('input', updateMortgage);
+    downPayment.addEventListener('input', updateMortgage);
+    interestRate.addEventListener('input', updateMortgage);
+
+    // Search demo
+    document.querySelector('.hero-gradient button')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      const input = document.querySelector('.hero-gradient input');
+      alert(`🔍 Searching for "${input?.value || 'properties'}" — showing live results.`);
+    });
+    // Affordability CTA
+    document.querySelector('a[href="#"] .fa-calculator')?.closest('a')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      calcPanel.classList.remove('hidden');
+      updateMortgage();
+    });
+
+  })();
+</script>
+
+</body>
+</html>
