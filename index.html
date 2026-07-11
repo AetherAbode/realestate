@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherAbode · live real estate</title>
+  <!-- Font & icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #1a1a2e;
+      line-height: 1.5;
+    }
+
+    /* ----- TOP BAR (Zillow inspired) ----- */
+    .top-bar {
+      background: white;
+      padding: 0.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e4e7ec;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      background: #006aff;
+      color: white;
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.5px;
+      box-shadow: 0 4px 8px rgba(0,106,255,0.2);
+    }
+
+    .logo-text {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(145deg, #0b1b3a, #1b3b7a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+    .logo-text span {
+      font-weight: 300;
+      color: #006aff;
+      -webkit-text-fill-color: #006aff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 500;
+      color: #2d3e5f;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .nav-links a i {
+      color: #006aff;
+    }
+    .nav-links a:hover { color: #006aff; }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .user-actions a {
+      text-decoration: none;
+      color: #1a2a4a;
+      font-weight: 500;
+    }
+    .btn-signin {
+      background: #006aff;
+      color: white !important;
+      padding: 0.5rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,106,255,0.2);
+    }
+    .btn-signin:hover {
+      background: #0050c7;
+      transform: scale(1.02);
+    }
+
+    /* ----- HERO SEARCH (zillow style) ----- */
+    .hero-search {
+      background: linear-gradient(135deg, #0b1d3a 0%, #1f3d6b 100%);
+      padding: 2.8rem 2rem 3rem;
+      text-align: center;
+      color: white;
+    }
+    .hero-search h1 {
+      font-size: 2.8rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 1rem;
+    }
+    .hero-search p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin-bottom: 1.8rem;
+    }
+    .search-box {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      background: white;
+      border-radius: 60px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+    .search-box input {
+      flex: 1;
+      padding: 1.2rem 1.8rem;
+      border: none;
+      font-size: 1.1rem;
+      outline: none;
+      color: #1a1a2e;
+    }
+    .search-box button {
+      background: #006aff;
+      border: none;
+      padding: 0 2.2rem;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .search-box button:hover {
+      background: #004bb5;
+    }
+
+    /* ----- MAIN LISTING GRID (Zillow replica) ----- */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .section-header h2 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b1b3a;
+    }
+    .section-header a {
+      color: #006aff;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    /* CARD - exactly Zillow premium feel */
+    .listing-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s ease;
+      border: 1px solid #edf2f7;
+      cursor: default;
+    }
+    .listing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 20, 50, 0.12);
+      border-color: #cbd5e0;
+    }
+
+    .card-img {
+      height: 210px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .card-fav {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b0b9c9;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .card-fav:hover { color: #e53e3e; background: #fff5f5; }
+
+    .card-body {
+      padding: 1.2rem 1.2rem 1.5rem;
+    }
+    .price {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0b1b3a;
+    }
+    .price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #5a6e8a;
+    }
+    .address {
+      font-weight: 500;
+      color: #1f334f;
+      font-size: 1.1rem;
+      margin: 0.2rem 0 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .beds-baths {
+      display: flex;
+      gap: 1.5rem;
+      color: #3d526f;
+      font-size: 0.95rem;
+      margin: 0.5rem 0 0.3rem;
+    }
+    .beds-baths i {
+      margin-right: 0.25rem;
+      color: #006aff;
+    }
+    .agent-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.9rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid #eef2f6;
+      font-size: 0.9rem;
+    }
+    .agent {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .agent img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #dce3ec;
+    }
+    .agent-name {
+      font-weight: 500;
+      color: #1a2a4a;
+    }
+    .agent-title {
+      color: #6b7e9b;
+      font-size: 0.75rem;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+      color: #4d637f;
+      font-size: 0.85rem;
+    }
+    .card-footer i {
+      color: #006aff;
+      margin-right: 0.2rem;
+    }
+    .days {
+      background: #eef5ff;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      color: #006aff;
+      font-weight: 500;
+      font-size: 0.75rem;
+    }
+
+    /* extra details strip */
+    .extra-detail {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-top: 0.4rem;
+      color: #3f5679;
+      font-size: 0.85rem;
+    }
+    .extra-detail i {
+      color: #006aff;
+      width: 1.1rem;
+    }
+
+    /* ----- FOOTER (zillow style) ----- */
+    .footer {
+      background: #0b1a2f;
+      color: #cbd5e1;
+      padding: 3rem 2rem 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid #1f3a5f;
+    }
+    .footer-grid {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+      gap: 2.5rem;
+    }
+    .footer h4 {
+      color: white;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .footer a {
+      display: block;
+      color: #a0b8d4;
+      text-decoration: none;
+      margin: 0.4rem 0;
+      font-size: 0.95rem;
+    }
+    .footer a:hover { color: white; }
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid #1f3a5f;
+      margin-top: 2.5rem;
+      font-size: 0.9rem;
+      color: #7f96b3;
+    }
+
+    /* responsive */
+    @media (max-width: 768px) {
+      .top-bar { flex-direction: column; align-items: stretch; }
+      .nav-links { justify-content: center; flex-wrap: wrap; gap: 1.2rem; }
+      .user-actions { justify-content: center; }
+      .hero-search h1 { font-size: 2rem; }
+      .search-box { flex-wrap: wrap; border-radius: 40px; }
+      .search-box input { width: 100%; border-radius: 40px 40px 0 0; }
+      .search-box button { width: 100%; justify-content: center; padding: 0.8rem; border-radius: 0 0 40px 40px; }
+      .section-header h2 { font-size: 1.5rem; }
+    }
+
+    /* custom images - all high quality real estate */
+    .img-1 { background-image: url('https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600'); }
+    .img-2 { background-image: url('https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=600'); }
+    .img-3 { background-image: url('https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=600'); }
+    .img-4 { background-image: url('https://images.pexels.com/photos/280221/pexels-photo-280221.jpeg?auto=compress&cs=tinysrgb&w=600'); }
+    .img-5 { background-image: url('https://images.pexels.com/photos/280219/pexels-photo-280219.jpeg?auto=compress&cs=tinysrgb&w=600'); }
+    .img-6 { background-image: url('https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=600'); }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="logo-area">
+    <div class="logo-icon">A</div>
+    <div class="logo-text">Aether<span>Abode</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#"><i class="fas fa-home"></i> Buy</a>
+    <a href="#"><i class="fas fa-key"></i> Rent</a>
+    <a href="#"><i class="fas fa-chart-line"></i> Sell</a>
+    <a href="#"><i class="fas fa-map-pin"></i> Home Loans</a>
+  </div>
+  <div class="user-actions">
+    <a href="#"><i class="fas fa-bell"></i></a>
+    <a href="#" class="btn-signin">Sign in</a>
+  </div>
+</div>
+
+<!-- HERO SEARCH -->
+<div class="hero-search">
+  <h1>Discover your dream place</h1>
+  <p>Luxury, comfort, and investment — AetherAbode brings you the finest listings</p>
+  <div class="search-box">
+    <input type="text" placeholder="📍 Search by city, address, or ZIP" value="Austin, TX">
+    <button><i class="fas fa-search"></i> Search</button>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="container">
+  <div class="section-header">
+    <h2><i class="fas fa-building" style="color:#006aff; margin-right: 10px;"></i> Featured homes</h2>
+    <a href="#">View all 24 listings <i class="fas fa-arrow-right"></i></a>
+  </div>
+
+  <div class="grid">
+    <!-- card 1 -->
+    <div class="listing-card">
+      <div class="card-img img-1">
+        <span class="card-badge"><i class="fas fa-check-circle"></i> For sale</span>
+        <span class="card-fav"><i class="far fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="price">$875,000 <span>+ est. 6.2%</span></div>
+        <div class="address">1207 Parkview Dr, Austin, TX 78704</div>
+        <div class="beds-baths"><span><i class="fas fa-bed"></i> 4</span> <span><i class="fas fa-bath"></i> 3.5</span> <span><i class="fas fa-vector-square"></i> 2,870 sqft</span></div>
+        <div class="extra-detail"><span><i class="fas fa-calendar-alt"></i> Built 2021</span> <span><i class="fas fa-tree"></i> 0.32 ac</span></div>
+        <div class="agent-row">
+          <div class="agent"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="agent"> <div><div class="agent-name">Elena V.</div><div class="agent-title">Premier agent</div></div></div>
+          <div class="days"><i class="far fa-clock"></i> 6 days</div>
+        </div>
+        <div class="card-footer"><span><i class="fas fa-home"></i> Single family</span> <span><i class="fas fa-dollar-sign"></i> $302/sqft</span></div>
+      </div>
+    </div>
+
+    <!-- card 2 -->
+    <div class="listing-card">
+      <div class="card-img img-2">
+        <span class="card-badge"><i class="fas fa-check-circle"></i> For sale</span>
+        <span class="card-fav"><i class="far fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="price">$2,450,000 <span>+ est. 8.1%</span></div>
+        <div class="address">4 Cliffside Ln, Malibu, CA 90265</div>
+        <div class="beds-baths"><span><i class="fas fa-bed"></i> 5</span> <span><i class="fas fa-bath"></i> 5</span> <span><i class="fas fa-vector-square"></i> 4,920 sqft</span></div>
+        <div class="extra-detail"><span><i class="fas fa-calendar-alt"></i> Built 2019</span> <span><i class="fas fa-water"></i> Ocean view</span></div>
+        <div class="agent-row">
+          <div class="agent"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="agent"> <div><div class="agent-name">Marcus L.</div><div class="agent-title">Luxury specialist</div></div></div>
+          <div class="days"><i class="far fa-clock"></i> 2 days</div>
+        </div>
+        <div class="card-footer"><span><i class="fas fa-home"></i> Contemporary</span> <span><i class="fas fa-dollar-sign"></i> $498/sqft</span></div>
+      </div>
+    </div>
+
+    <!-- card 3 -->
+    <div class="listing-card">
+      <div class="card-img img-3">
+        <span class="card-badge"><i class="fas fa-star"></i> Open house</span>
+        <span class="card-fav"><i class="far fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="price">$635,000 <span>+ est. 5.3%</span></div>
+        <div class="address">312 Elmwood Ave, Nashville, TN 37205</div>
+        <div class="beds-baths"><span><i class="fas fa-bed"></i> 3</span> <span><i class="fas fa-bath"></i> 2</span> <span><i class="fas fa-vector-square"></i> 1,880 sqft</span></div>
+        <div class="extra-detail"><span><i class="fas fa-calendar-alt"></i> Built 2005</span> <span><i class="fas fa-utensils"></i> Renovated</span></div>
+        <div class="agent-row">
+          <div class="agent"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="agent"> <div><div class="agent-name">Sophia K.</div><div class="agent-title">Realty expert</div></div></div>
+          <div class="days"><i class="far fa-clock"></i> 12 days</div>
+        </div>
+        <div class="card-footer"><span><i class="fas fa-home"></i> Craftsman</span> <span><i class="fas fa-dollar-sign"></i> $338/sqft</span></div>
+      </div>
+    </div>
+
+    <!-- card 4 -->
+    <div class="listing-card">
+      <div class="card-img img-4">
+        <span class="card-badge"><i class="fas fa-check-circle"></i> New</span>
+        <span class="card-fav"><i class="far fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="price">$1,125,000 <span>+ est. 7.4%</span></div>
+        <div class="address">8500 Bay Harbor Dr, Miami, FL 33141</div>
+        <div class="beds-baths"><span><i class="fas fa-bed"></i> 4</span> <span><i class="fas fa-bath"></i> 3</span> <span><i class="fas fa-vector-square"></i> 2,540 sqft</span></div>
+        <div class="extra-detail"><span><i class="fas fa-calendar-alt"></i> Built 2023</span> <span><i class="fas fa-swimmer"></i> Pool</span></div>
+        <div class="agent-row">
+          <div class="agent"><img src="https://randomuser.me/api/portraits/men/75.jpg" alt="agent"> <div><div class="agent-name">Derek P.</div><div class="agent-title">Waterfront pro</div></div></div>
+          <div class="days"><i class="far fa-clock"></i> 1 day</div>
+        </div>
+        <div class="card-footer"><span><i class="fas fa-home"></i> Mediterranean</span> <span><i class="fas fa-dollar-sign"></i> $443/sqft</span></div>
+      </div>
+    </div>
+
+    <!-- card 5 -->
+    <div class="listing-card">
+      <div class="card-img img-5">
+        <span class="card-badge"><i class="fas fa-check-circle"></i> For sale</span>
+        <span class="card-fav"><i class="far fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="price">$1,980,000 <span>+ est. 9.0%</span></div>
+        <div class="address">7 Aspen Ridge, Boulder, CO 80304</div>
+        <div class="beds-baths"><span><i class="fas fa-bed"></i> 4</span> <span><i class="fas fa-bath"></i> 4.5</span> <span><i class="fas fa-vector-square"></i> 3,650 sqft</span></div>
+        <div class="extra-detail"><span><i class="fas fa-calendar-alt"></i> Built 2018</span> <span><i class="fas fa-mountain"></i> Mountain view</span></div>
+        <div class="agent-row">
+          <div class="agent"><img src="https://randomuser.me/api/portraits/women/21.jpg" alt="agent"> <div><div class="agent-name">Nina R.</div><div class="agent-title">Luxury agent</div></div></div>
+          <div class="days"><i class="far fa-clock"></i> 8 days</div>
+        </div>
+        <div class="card-footer"><span><i class="fas fa-home"></i> Modern</span> <span><i class="fas fa-dollar-sign"></i> $542/sqft</span></div>
+      </div>
+    </div>
+
+    <!-- card 6 -->
+    <div class="listing-card">
+      <div class="card-img img-6">
+        <span class="card-badge"><i class="fas fa-star"></i> Featured</span>
+        <span class="card-fav"><i class="far fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="price">$550,000 <span>+ est. 4.7%</span></div>
+        <div class="address">2404 Cherry St, Denver, CO 80205</div>
+        <div class="beds-baths"><span><i class="fas fa-bed"></i> 3</span> <span><i class="fas fa-bath"></i> 2</span> <span><i class="fas fa-vector-square"></i> 1,620 sqft</span></div>
+        <div class="extra-detail"><span><i class="fas fa-calendar-alt"></i> Built 1926</span> <span><i class="fas fa-fire"></i> Fireplace</span></div>
+        <div class="agent-row">
+          <div class="agent"><img src="https://randomuser.me/api/portraits/men/52.jpg" alt="agent"> <div><div class="agent-name">James C.</div><div class="agent-title">Historic homes</div></div></div>
+          <div class="days"><i class="far fa-clock"></i> 4 days</div>
+        </div>
+        <div class="card-footer"><span><i class="fas fa-home"></i> Victorian</span> <span><i class="fas fa-dollar-sign"></i> $340/sqft</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- additional mini section: just like Zillow "more" -->
+  <div style="margin-top: 3rem; text-align: center;">
+    <a href="#" style="background: white; padding: 0.8rem 3rem; border-radius: 60px; border:1px solid #d0d9e8; font-weight: 600; color: #0b1b3a; text-decoration: none; box-shadow: 0 2px 12px rgba(0,0,0,0.02); transition:0.2s; display: inline-block;">Browse all 247 homes <i class="fas fa-arrow-right" style="margin-left:8px;"></i></a>
+  </div>
+</div>
+
+<!-- FOOTER (Zillow replica) -->
+<div class="footer">
+  <div class="footer-grid">
+    <div><h4>AetherAbode</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Investors</a><a href="#">Press</a></div>
+    <div><h4>Resources</h4><a href="#">Buying guides</a><a href="#">Selling tools</a><a href="#">Home loans</a><a href="#">Rental tips</a></div>
+    <div><h4>Popular cities</h4><a href="#">Austin</a><a href="#">Los Angeles</a><a href="#">New York</a><a href="#">Miami</a></div>
+    <div><h4>Connect</h4><a href="#"><i class="fab fa-instagram"></i> Instagram</a><a href="#"><i class="fab fa-twitter"></i> Twitter</a><a href="#"><i class="fab fa-youtube"></i> YouTube</a></div>
+  </div>
+  <div class="footer-bottom">
+    <i class="fas fa-copyright" style="margin-right: 6px;"></i> 2026 AetherAbode Real Estate · Data sourced from local MLS · All rights reserved
+  </div>
+</div>
+
+</body>
+</html>
