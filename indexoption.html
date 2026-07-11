@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>AetherAbode · Premium Real Estate</title>
+  <!-- Tailwind + dark mode plugin -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#006aff',
+            darkbg: '#0f172a',
+            darkcard: '#1e293b',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* premium polish & animations */
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; transition: background 0.3s, color 0.3s; }
+    .glass-nav { background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .dark .glass-nav { background: rgba(15,23,42,0.92); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .card-hover { transition: all 0.25s cubic-bezier(0.2, 0, 0, 1); border: 1px solid #edf2f7; }
+    .dark .card-hover { border-color: #334155; background: #1e293b; }
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 25px 40px -16px rgba(0,20,50,0.18); border-color: #d0dcec; }
+    .dark .card-hover:hover { border-color: #475569; box-shadow: 0 25px 40px -16px rgba(0,0,0,0.5); }
+    .btn-primary { background: #006aff; transition: 0.15s; }
+    .btn-primary:hover { background: #004bb5; transform: scale(1.01); }
+    .img-cover { background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .agent-ring { box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(0,106,255,0.12); }
+    .gradient-text { background: linear-gradient(145deg, #0b1d3a, #1f3d6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .dark .gradient-text { background: linear-gradient(145deg, #a5c9ff, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tab-active { border-bottom: 3px solid #006aff; color: #006aff; font-weight: 600; }
+    .tab-inactive { color: #4d637f; border-bottom: 3px solid transparent; }
+    .dark .tab-inactive { color: #94a3b8; }
+    .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    /* mobile menu */
+    #mobileMenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    #mobileMenu.open { max-height: 500px; }
+    .footer-link { transition: 0.15s; }
+    .footer-link:hover { color: white; padding-left: 4px; }
+    .dark .footer-link:hover { color: #60a5fa; }
+    /* smooth transitions for views */
+    .view { display: none; }
+    .view.active { display: block; }
+    /* custom scroll */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c1c9d6; border-radius: 8px; }
+    .dark ::-webkit-scrollbar-track { background: #1e293b; }
+    .dark ::-webkit-scrollbar-thumb { background: #475569; }
+  </style>
+</head>
+<body class="bg-[#f4f6f9] text-[#0b1d3a] dark:bg-darkbg dark:text-gray-200">
+
+<!-- ========== TOP NAV (premium upgrade) ========== -->
+<header class="glass-nav sticky top-0 z-50 transition-colors">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+      <!-- logo -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-blue-500/20">A</div>
+        <span class="text-2xl font-bold tracking-tight gradient-text">Aether<span class="text-primary bg-clip-text text-transparent" style="-webkit-text-fill-color: #006aff;">Abode</span></span>
+      </div>
+      <!-- nav links (desktop) -->
+      <nav class="hidden lg:flex items-center gap-6 font-medium text-[#2d3e5f] dark:text-gray-300">
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-home text-primary"></i> Buy</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-key text-primary"></i> Rent</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-chart-line text-primary"></i> Sell</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-user-tie text-primary"></i> Agent Finder</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-home text-primary"></i> Manage Rentals</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-hand-holding-usd text-primary"></i> Home Loans</a>
+      </nav>
+      <!-- right actions -->
+      <div class="flex items-center gap-3 sm:gap-5">
+        <!-- dark mode toggle -->
+        <button id="darkToggle" class="text-[#2d3e5f] dark:text-gray-300 hover:text-primary transition text-lg"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:inline"></i></button>
+        <button class="hidden sm:inline-flex text-[#2d3e5f] dark:text-gray-300 hover:text-primary transition text-lg"><i class="far fa-heart"></i></button>
+        <button class="hidden sm:inline-flex text-[#2d3e5f] dark:text-gray-300 hover:text-primary transition text-lg"><i class="far fa-bell"></i></button>
+        <!-- user actions: if logged in show avatar + dashboard link -->
+        <div id="userActions" class="flex items-center gap-2">
+          <!-- dynamic content -->
+        </div>
+        <!-- mobile hamburger -->
+        <button id="menuToggle" class="lg:hidden text-[#2d3e5f] dark:text-gray-300 hover:text-primary text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+    <!-- mobile nav -->
+    <div id="mobileMenu" class="lg:hidden bg-white/95 dark:bg-darkbg/95 backdrop-blur-sm border-t border-[#e4e7ec] dark:border-[#334155]">
+      <div class="flex flex-col py-4 space-y-3 text-[#2d3e5f] dark:text-gray-300 font-medium">
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-home text-primary w-6"></i> Buy</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-key text-primary w-6"></i> Rent</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-chart-line text-primary w-6"></i> Sell</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-user-tie text-primary w-6"></i> Agent Finder</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-home text-primary w-6"></i> Manage Rentals</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-hand-holding-usd text-primary w-6"></i> Home Loans</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== MAIN VIEW CONTAINER ========== -->
+<div id="app">
+
+  <!-- ====== HOME VIEW ====== -->
+  <div id="homeView" class="view active">
+    <!-- HERO + SEARCH -->
+    <section class="bg-gradient-to-b from-[#eef4ff] to-[#f5f7fb] dark:from-[#0f172a] dark:to-[#1e293b] px-4 py-10 md:py-20 relative overflow-hidden transition-colors">
+      <div class="max-w-5xl mx-auto text-center relative z-10">
+        <span class="inline-block bg-white/80 dark:bg-darkbg/80 backdrop-blur-sm text-primary text-xs font-bold tracking-wider px-4 py-1.5 rounded-full border border-white/60 dark:border-gray-700 shadow-sm mb-5"><i class="fas fa-bolt mr-1.5"></i> LIVE · 2,340+ ACTIVE LISTINGS</span>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-[#0b1d3a] dark:text-white">Find your <span class="text-primary">perfect</span> place</h1>
+        <p class="text-base sm:text-lg md:text-xl text-[#3d526f] dark:text-gray-300 max-w-2xl mx-auto mt-4 mb-8">Search millions of homes, rentals, and real estate insights — all in one place.</p>
+        <!-- search box -->
+        <div class="flex flex-col sm:flex-row bg-white dark:bg-darkcard rounded-2xl shadow-2xl shadow-blue-500/10 border border-white/80 dark:border-gray-700 p-1.5 max-w-3xl mx-auto">
+          <div class="flex-1 flex items-center px-4 py-1.5">
+            <i class="fas fa-search text-primary opacity-70 mr-3"></i>
+            <input type="text" placeholder="📍 Address, city, or ZIP" value="Austin, TX" class="w-full py-3 outline-none bg-transparent text-[#1a2a4a] dark:text-gray-200 font-medium placeholder-[#9aabc0] dark:placeholder-gray-500 rounded-xl" />
+          </div>
+          <button class="btn-primary text-white font-semibold px-8 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"><i class="fas fa-arrow-right"></i> Search</button>
+        </div>
+        <!-- secondary CTA -->
+        <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+          <a href="#" class="bg-white/70 dark:bg-darkbg/70 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/50 dark:border-gray-700 shadow-sm hover:shadow-md transition flex items-center gap-2 text-[#0b1d3a] dark:text-gray-200 font-medium"><i class="fas fa-calculator text-primary"></i> See what you can afford</a>
+          <a href="#" class="bg-white/70 dark:bg-darkbg/70 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/50 dark:border-gray-700 shadow-sm hover:shadow-md transition flex items-center gap-2 text-[#0b1d3a] dark:text-gray-200 font-medium"><i class="fas fa-map-pin text-primary"></i> Explore neighborhoods</a>
+        </div>
+      </div>
+      <div class="absolute -top-20 -right-20 w-72 h-72 bg-primary opacity-[0.04] rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-[#0b1d3a] dark:bg-primary opacity-[0.02] rounded-full blur-3xl"></div>
+    </section>
+
+    <!-- FILTER PILLS (Buy/Rent toggle) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 relative z-20">
+      <div class="flex flex-wrap items-center gap-2 bg-white dark:bg-darkcard rounded-2xl shadow-sm border border-[#e4e7ec] dark:border-[#334155] p-2 md:p-3">
+        <button id="tabBuy" class="tab-active px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2"><i class="fas fa-home"></i> Buy</button>
+        <button id="tabRent" class="tab-inactive px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2"><i class="fas fa-key"></i> Rent</button>
+        <div class="flex-1"></div>
+        <div class="flex flex-wrap items-center gap-2 text-xs text-[#4d637f] dark:text-gray-400">
+          <span class="flex items-center gap-1 bg-[#f0f4fe] dark:bg-[#1e293b] px-3 py-1.5 rounded-full"><i class="fas fa-bed"></i> Beds</span>
+          <span class="flex items-center gap-1 bg-[#f0f4fe] dark:bg-[#1e293b] px-3 py-1.5 rounded-full"><i class="fas fa-bath"></i> Baths</span>
+          <span class="flex items-center gap-1 bg-[#f0f4fe] dark:bg-[#1e293b] px-3 py-1.5 rounded-full"><i class="fas fa-dollar-sign"></i> Price</span>
+          <span class="flex items-center gap-1 bg-primary text-white px-4 py-1.5 rounded-full font-medium">Apply</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Listings -->
+      <div class="flex flex-wrap items-center justify-between mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#0b1d3a] dark:text-white flex items-center gap-2"><i class="fas fa-list-ul text-primary"></i> <span id="listingTitle">Homes for sale</span></h2>
+        <a href="#" class="text-primary font-medium hover:underline text-sm">View all 247 <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div id="listingGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <!-- Recently Viewed (if logged in) -->
+      <div id="recentlyViewedSection" class="mt-12 hidden">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#0b1d3a] dark:text-white flex items-center gap-2"><i class="fas fa-clock text-primary"></i> Recently viewed</h2>
+        <div id="recentlyViewedGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"></div>
+      </div>
+
+      <!-- Explore Markets -->
+      <section class="mt-16">
+        <div class="flex flex-wrap items-center justify-between mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-[#0b1d3a] dark:text-white flex items-center gap-2"><i class="fas fa-globe-americas text-primary"></i> Explore popular markets</h2>
+          <a href="#" class="text-primary font-medium hover:underline text-sm">See all <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div class="bg-white dark:bg-darkcard rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] dark:border-[#334155] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a] dark:text-white">Austin</span><span class="block text-xs text-[#5a6e8a] dark:text-gray-400">$560K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +6.2%</span></div>
+          <div class="bg-white dark:bg-darkcard rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] dark:border-[#334155] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a] dark:text-white">NYC</span><span class="block text-xs text-[#5a6e8a] dark:text-gray-400">$780K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +4.1%</span></div>
+          <div class="bg-white dark:bg-darkcard rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] dark:border-[#334155] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a] dark:text-white">LA</span><span class="block text-xs text-[#5a6e8a] dark:text-gray-400">$980K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +5.8%</span></div>
+          <div class="bg-white dark:bg-darkcard rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] dark:border-[#334155] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a] dark:text-white">Miami</span><span class="block text-xs text-[#5a6e8a] dark:text-gray-400">$620K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +7.9%</span></div>
+          <div class="bg-white dark:bg-darkcard rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] dark:border-[#334155] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a] dark:text-white">Denver</span><span class="block text-xs text-[#5a6e8a] dark:text-gray-400">$580K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +3.4%</span></div>
+          <div class="bg-white dark:bg-darkcard rounded-2xl p-4 text-center shadow-soft border border-[#edf2f7] dark:border-[#334155] hover:shadow-md transition cursor-pointer"><span class="font-bold text-[#0b1d3a] dark:text-white">Seattle</span><span class="block text-xs text-[#5a6e8a] dark:text-gray-400">$750K median</span><span class="block text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +4.9%</span></div>
+        </div>
+      </section>
+
+      <!-- Market Trends -->
+      <section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="stat-card bg-white dark:bg-darkcard border-[#eef2f6] dark:border-[#334155]"><i class="fas fa-chart-line text-3xl text-primary mb-2"></i><h3 class="font-bold text-xl dark:text-white">$408,500</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Median home value</p><span class="text-xs text-green-600 font-semibold"><i class="fas fa-arrow-up"></i> +3.2% YoY</span></div>
+        <div class="stat-card bg-white dark:bg-darkcard border-[#eef2f6] dark:border-[#334155]"><i class="fas fa-clock text-3xl text-primary mb-2"></i><h3 class="font-bold text-xl dark:text-white">32 days</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Median days on market</p><span class="text-xs text-[#5a6e8a] dark:text-gray-400">⬇️ 4 days faster than last year</span></div>
+        <div class="stat-card bg-white dark:bg-darkcard border-[#eef2f6] dark:border-[#334155]"><i class="fas fa-percent text-3xl text-primary mb-2"></i><h3 class="font-bold text-xl dark:text-white">98.7%</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Listing price received</p><span class="text-xs text-green-600 font-semibold">⬆️ Strong seller market</span></div>
+      </section>
+
+      <!-- Agent Finder -->
+      <section class="mt-16">
+        <div class="flex flex-wrap items-center justify-between mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-[#0b1d3a] dark:text-white flex items-center gap-2"><i class="fas fa-user-tie text-primary"></i> Find a top agent</h2>
+          <a href="#" class="text-primary font-medium hover:underline text-sm">See all <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white dark:bg-darkcard p-5 rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] flex items-start gap-4 card-hover">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-16 h-16 rounded-full object-cover agent-ring" alt="agent" />
+            <div><h4 class="font-bold dark:text-white">Elena V.</h4><p class="text-xs text-[#5a6e8a] dark:text-gray-400">Premier agent · 12 yrs</p><div class="flex text-yellow-400 text-xs mt-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p class="text-xs text-primary font-medium mt-1">4.9 (147 reviews)</p></div>
+          </div>
+          <div class="bg-white dark:bg-darkcard p-5 rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] flex items-start gap-4 card-hover">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 rounded-full object-cover agent-ring" alt="agent" />
+            <div><h4 class="font-bold dark:text-white">Marcus L.</h4><p class="text-xs text-[#5a6e8a] dark:text-gray-400">Luxury specialist</p><div class="flex text-yellow-400 text-xs mt-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="text-xs text-primary font-medium mt-1">5.0 (203 reviews)</p></div>
+          </div>
+          <div class="bg-white dark:bg-darkcard p-5 rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] flex items-start gap-4 card-hover">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-16 h-16 rounded-full object-cover agent-ring" alt="agent" />
+            <div><h4 class="font-bold dark:text-white">Sophia K.</h4><p class="text-xs text-[#5a6e8a] dark:text-gray-400">Elite director · 15 yrs</p><div class="flex text-yellow-400 text-xs mt-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="text-xs text-primary font-medium mt-1">5.0 (98 reviews)</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Home Loans / Mortgage -->
+      <section class="mt-16 bg-gradient-to-r from-[#0b1d3a] to-[#1f3d6b] dark:from-[#0f172a] dark:to-[#1e293b] rounded-3xl p-8 md:p-12 text-white shadow-2xl shadow-blue-900/20">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div>
+            <h3 class="text-2xl md:text-3xl font-bold flex items-center gap-3"><i class="fas fa-hand-holding-usd text-[#ffd966]"></i> AetherAbode Home Loans</h3>
+            <p class="text-blue-200/90 max-w-lg mt-1">Check rates, calculate payments, and get pre‑approved in minutes.</p>
+            <div class="flex flex-wrap gap-4 mt-4">
+              <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm border border-white/10"><span class="font-bold">6.8%</span> 30‑yr fixed</span>
+              <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm border border-white/10"><span class="font-bold">6.1%</span> 15‑yr fixed</span>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <button id="calcBtn" class="bg-white text-[#0b1d3a] font-semibold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2"><i class="fas fa-calculator"></i> Calculate payment</button>
+            <button class="border border-white/30 text-white font-medium px-6 py-3.5 rounded-full hover:bg-white/10 transition flex items-center justify-center gap-2"><i class="fas fa-pen"></i> Get pre‑approved</button>
+          </div>
+        </div>
+        <div id="calcPanel" class="mt-6 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hidden transition-all">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-white">
+            <div><label class="text-sm text-blue-200">Home price</label><input type="number" value="450000" class="w-full bg-white/20 rounded-lg px-3 py-2 border border-white/10 text-white font-medium" id="homePrice" /></div>
+            <div><label class="text-sm text-blue-200">Down payment %</label><input type="number" value="20" class="w-full bg-white/20 rounded-lg px-3 py-2 border border-white/10 text-white font-medium" id="downPayment" /></div>
+            <div><label class="text-sm text-blue-200">Rate %</label><input type="number" step="0.1" value="6.8" class="w-full bg-white/20 rounded-lg px-3 py-2 border border-white/10 text-white font-medium" id="interestRate" /></div>
+          </div>
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+            <span class="text-white font-medium">Estimated monthly payment: <span id="monthlyPayment" class="text-2xl font-bold text-[#ffd966]">$2,342</span></span>
+            <button id="closeCalc" class="bg-white/20 hover:bg-white/30 text-white px-5 py-2 rounded-full text-sm transition">Close</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ====== DASHBOARD VIEW ====== -->
+  <div id="dashboardView" class="view">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 sticky top-24">
+            <div class="flex flex-col items-center text-center">
+              <img id="dashboardAvatar" src="https://randomuser.me/api/portraits/men/32.jpg" class="w-24 h-24 rounded-full object-cover agent-ring mb-3" alt="user" />
+              <h3 id="dashboardName" class="text-xl font-bold dark:text-white">User</h3>
+              <p id="dashboardEmail" class="text-sm text-[#5a6e8a] dark:text-gray-400">user@example.com</p>
+              <p class="text-xs text-[#5a6e8a] dark:text-gray-400 mt-1">Joined <span id="joinDate">Jan 2025</span></p>
+              <hr class="w-full my-4 border-[#edf2f7] dark:border-[#334155]" />
+              <nav class="w-full text-left text-sm font-medium text-[#2d3e5f] dark:text-gray-300 space-y-2">
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20"><i class="fas fa-th-large w-5"></i> Dashboard</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-heart w-5"></i> Saved homes</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-clock w-5"></i> Recently viewed</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-cog w-5"></i> Settings</a>
+                <a href="#" id="logoutBtn" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition"><i class="fas fa-sign-out-alt w-5"></i> Logout</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <!-- Main content -->
+        <div class="lg:col-span-3 space-y-8">
+          <!-- Welcome -->
+          <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6">
+            <h2 class="text-2xl font-bold dark:text-white">Welcome back, <span id="welcomeName">User</span>!</h2>
+            <p class="text-[#5a6e8a] dark:text-gray-400">Here's what's happening with your real estate activity.</p>
+          </div>
+          <!-- Stats -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 text-center"><i class="fas fa-heart text-3xl text-primary"></i><h3 class="text-2xl font-bold dark:text-white mt-2" id="savedCount">0</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Saved homes</p></div>
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 text-center"><i class="fas fa-eye text-3xl text-primary"></i><h3 class="text-2xl font-bold dark:text-white mt-2" id="viewedCount">0</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Recently viewed</p></div>
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 text-center"><i class="fas fa-search text-3xl text-primary"></i><h3 class="text-2xl font-bold dark:text-white mt-2">12</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Saved searches</p></div>
+          </div>
+          <!-- Saved Listings -->
+          <div>
+            <h3 class="text-xl font-bold dark:text-white flex items-center gap-2"><i class="fas fa-heart text-primary"></i> Your saved homes</h3>
+            <div id="savedListingsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"></div>
+            <p id="noSavedMsg" class="text-center text-[#5a6e8a] dark:text-gray-400 py-8 hidden">You haven't saved any homes yet. Start exploring!</p>
+          </div>
+          <!-- Recently viewed on dashboard -->
+          <div>
+            <h3 class="text-xl font-bold dark:text-white flex items-center gap-2"><i class="fas fa-clock text-primary"></i> Recently viewed</h3>
+            <div id="dashRecentlyViewedGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"></div>
+            <p id="noViewedMsg" class="text-center text-[#5a6e8a] dark:text-gray-400 py-8 hidden">No recent views.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== LOGIN / SIGNUP MODAL ========== -->
+<div id="authModal" class="fixed inset-0 flex items-center justify-center z-50 modal-overlay hidden">
+  <div class="bg-white dark:bg-darkcard rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 relative transform transition-all">
+    <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fas fa-times text-xl"></i></button>
+    <div class="text-center mb-6">
+      <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fas fa-user-circle text-4xl text-primary"></i></div>
+      <h3 id="authTitle" class="text-2xl font-bold dark:text-white">Sign in</h3>
+      <p id="authSubtitle" class="text-sm text-[#5a6e8a] dark:text-gray-400">Welcome back! Enter your credentials.</p>
+    </div>
+    <form id="authForm">
+      <div id="signupFields" class="hidden space-y-4">
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Full name</label><input type="text" id="signupName" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="John Doe" /></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Email</label><input type="email" id="signupEmail" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="you@example.com" /></div>
+      </div>
+      <div class="space-y-4">
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Username</label><input type="text" id="authUsername" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="username" required /></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Password</label><input type="password" id="authPassword" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="••••••••" required /></div>
+      </div>
+      <button type="submit" class="btn-primary w-full text-white font-semibold py-3 rounded-xl mt-6 transition">Sign in</button>
+      <p class="text-center text-sm text-[#5a6e8a] dark:text-gray-400 mt-4">
+        <span id="authToggleText">Don't have an account?</span>
+        <a href="#" id="authToggleLink" class="text-primary font-semibold hover:underline">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-[#0b1a2f] dark:bg-[#0f172a] text-[#cbd5e1] pt-16 pb-8 mt-10 border-t border-[#1f3a5f] dark:border-[#1e293b]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-10">
+      <div><h4 class="text-white font-semibold text-lg mb-4">AetherAbode</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">About</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Careers</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Investors</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Press</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Buy</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Homes for sale</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Open houses</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">New construction</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Coming soon</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Rent</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Apartments</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Houses</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Manage rentals</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Loans</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Mortgage rates</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Refinance</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition">Home equity</a></div>
+      <div><h4 class="text-white font-semibold text-lg mb-4">Connect</h4><a href="#" class="block footer-link py-1 text-sm hover:text-white transition"><i class="fab fa-instagram mr-2"></i> Instagram</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition"><i class="fab fa-twitter mr-2"></i> Twitter</a><a href="#" class="block footer-link py-1 text-sm hover:text-white transition"><i class="fab fa-youtube mr-2"></i> YouTube</a></div>
+    </div>
+    <div class="mt-12 pt-8 border-t border-[#1f3a5f] dark:border-[#1e293b] text-center text-sm text-[#7f96b3] dark:text-gray-500 flex flex-wrap justify-center gap-x-6 gap-y-2">
+      <span><i class="fas fa-copyright mr-1.5"></i> 2026 AetherAbode Real Estate</span>
+      <span>·</span>
+      <span>Data sourced from local MLS</span>
+      <span>·</span>
+      <span><i class="fas fa-shield-alt mr-1"></i> Verified listings</span>
+      <span>·</span>
+      <span>Privacy policy</span>
+      <span>·</span>
+      <span>Terms of use</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== JAVASCRIPT (full upgrade) ========== -->
+<script>
+  (function() {
+    // ---------- DATA ----------
+    const allListings = [
+      { id: 1, img: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$875,000', change: '+6.2%', address: '1207 Parkview Dr, Austin, TX 78704', beds: 4, baths: 3.5, sqft: 2870, built: 2021, agent: 'Elena V.', agentImg: 'https://randomuser.me/api/portraits/women/44.jpg', badge: 'For sale', type: 'buy' },
+      { id: 2, img: 'https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$2,450,000', change: '+8.1%', address: '4 Cliffside Ln, Malibu, CA 90265', beds: 5, baths: 5, sqft: 4920, built: 2019, agent: 'Marcus L.', agentImg: 'https://randomuser.me/api/portraits/men/32.jpg', badge: 'Open house', type: 'buy' },
+      { id: 3, img: 'https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$1,125,000', change: '+7.4%', address: '8500 Bay Harbor Dr, Miami, FL 33141', beds: 4, baths: 3, sqft: 2540, built: 2023, agent: 'Derek P.', agentImg: 'https://randomuser.me/api/portraits/men/75.jpg', badge: 'New', type: 'buy' },
+      { id: 4, img: 'https://images.pexels.com/photos/280221/pexels-photo-280221.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$1,980,000', change: '+9.0%', address: '7 Aspen Ridge, Boulder, CO 80304', beds: 4, baths: 4.5, sqft: 3650, built: 2018, agent: 'Nina R.', agentImg: 'https://randomuser.me/api/portraits/women/21.jpg', badge: 'For sale', type: 'buy' },
+      { id: 5, img: 'https://images.pexels.com/photos/280219/pexels-photo-280219.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$550,000', change: '+4.7%', address: '2404 Cherry St, Denver, CO 80205', beds: 3, baths: 2, sqft: 1620, built: 1926, agent: 'James C.', agentImg: 'https://randomuser.me/api/portraits/men/52.jpg', badge: 'Featured', type: 'buy' },
+      { id: 6, img: 'https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$3,200,000', change: '+11.2%', address: '12 Bel Air Rd, Los Angeles, CA 90077', beds: 6, baths: 6.5, sqft: 6200, built: 2022, agent: 'Sophia K.', agentImg: 'https://randomuser.me/api/portraits/women/68.jpg', badge: 'Virtual tour', type: 'buy' },
+      // rentals
+      { id: 7, img: 'https://images.pexels.com/photos/280219/pexels-photo-280219.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$2,800/mo', change: '+3.1%', address: '1201 High St, Denver, CO 80203', beds: 2, baths: 2, sqft: 1100, built: 2015, agent: 'Emily R.', agentImg: 'https://randomuser.me/api/portraits/women/33.jpg', badge: 'Available now', type: 'rent' },
+      { id: 8, img: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$3,900/mo', change: '+5.2%', address: '90 Pearl St, Austin, TX 78701', beds: 3, baths: 2.5, sqft: 1800, built: 2020, agent: 'Tom H.', agentImg: 'https://randomuser.me/api/portraits/men/45.jpg', badge: 'Open house', type: 'rent' },
+      { id: 9, img: 'https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=600', price: '$4,500/mo', change: '+4.8%', address: '22 Ocean Ave, Miami, FL 33139', beds: 3, baths: 3, sqft: 2100, built: 2021, agent: 'Luis G.', agentImg: 'https://randomuser.me/api/portraits/men/22.jpg', badge: 'Just listed', type: 'rent' }
+    ];
+
+    // ---------- STATE ----------
+    let currentUser = null;
+    let savedIds = [];
+    let viewedIds = [];
+
+    // ---------- DOM REFS ----------
+    const homeView = document.getElementById('homeView');
+    const dashboardView = document.getElementById('dashboardView');
+    const userActions = document.getElementById('userActions');
+    const authModal = document.getElementById('authModal');
+    const closeAuthModal = document.getElementById('closeAuthModal');
+    const authForm = document.getElementById('authForm');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const authToggleLink = document.getElementById('authToggleLink');
+    const authToggleText = document.getElementById('authToggleText');
+    const signupFields = document.getElementById('signupFields');
+    const authUsername = document.getElementById('authUsername');
+    const authPassword = document.getElementById('authPassword');
+    const signupName = document.getElementById('signupName');
+    const signupEmail = document.getElementById('signupEmail');
+    const listingGrid = document.getElementById('listingGrid');
+    const listingTitle = document.getElementById('listingTitle');
+    const tabBuy = document.getElementById('tabBuy');
+    const tabRent = document.getElementById('tabRent');
+    const recentlyViewedSection = document.getElementById('recentlyViewedSection');
+    const recentlyViewedGrid = document.getElementById('recentlyViewedGrid');
+    const savedListingsGrid = document.getElementById('savedListingsGrid');
+    const dashRecentlyViewedGrid = document.getElementById('dashRecentlyViewedGrid');
+    const savedCount = document.getElementById('savedCount');
+    const viewedCount = document.getElementById('viewedCount');
+    const noSavedMsg = document.getElementById('noSavedMsg');
+    const noViewedMsg = document.getElementById('noViewedMsg');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const dashboardName = document.getElementById('dashboardName');
+    const dashboardEmail = document.getElementById('dashboardEmail');
+    const joinDate = document.getElementById('joinDate');
+    const welcomeName = document.getElementById('welcomeName');
+
+    // ---------- UTILITY ----------
+    function getListingsByType(type) {
+      return allListings.filter(l => l.type === type);
+    }
+
+    function getListingById(id) {
+      return allListings.find(l => l.id === id);
+    }
+
+    function saveToLocal(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function getFromLocal(key) {
+      const val = localStorage.getItem(key);
+      return val ? JSON.parse(val) : null;
+    }
+
+    function getUsers() {
+      return getFromLocal('aether_users') || {};
+    }
+
+    function setUsers(users) {
+      saveToLocal('aether_users', users);
+    }
+
+    function getSaved(username) {
+      const all = getFromLocal('aether_saved') || {};
+      return all[username] || [];
+    }
+
+    function setSaved(username, ids) {
+      const all = getFromLocal('aether_saved') || {};
+      all[username] = ids;
+      saveToLocal('aether_saved', all);
+    }
+
+    function getViewed(username) {
+      const all = getFromLocal('aether_viewed') || {};
+      return all[username] || [];
+    }
+
+    function setViewed(username, ids) {
+      const all = getFromLocal('aether_viewed') || {};
+      all[username] = ids;
+      saveToLocal('aether_viewed', all);
+    }
+
+    function isAuthenticated() {
+      return currentUser !== null;
+    }
+
+    // ---------- AUTH ----------
+    function openAuthModal(mode = 'login') {
+      authModal.classList.remove('hidden');
+      if (mode === 'login') {
+        authTitle.innerText = 'Sign in';
+        authSubtitle.innerText = 'Welcome back! Enter your credentials.';
+        signupFields.classList.add('hidden');
+        authToggleText.innerText = "Don't have an account?";
+        authToggleLink.innerText = 'Sign up';
+        authForm.querySelector('button[type="submit"]').innerText = 'Sign in';
+      } else {
+        authTitle.innerText = 'Create account';
+        authSubtitle.innerText = 'Join AetherAbode and start saving homes.';
+        signupFields.classList.remove('hidden');
+        authToggleText.innerText = "Already have an account?";
+        authToggleLink.innerText = 'Sign in';
+        authForm.querySelector('button[type="submit"]').innerText = 'Sign up';
+      }
+    }
+
+    function closeAuthModalFn() {
+      authModal.classList.add('hidden');
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const username = authUsername.value.trim();
+      const password = authPassword.value.trim();
+      if (!username || !password) { alert('Please fill in all fields.'); return; }
+      const users = getUsers();
+      const isSignup = !signupFields.classList.contains('hidden');
+      if (isSignup) {
+        const name = signupName.value.trim() || username;
+        const email = signupEmail.value.trim() || `${username}@example.com`;
+        if (users[username]) { alert('Username already exists.'); return; }
+        users[username] = { password, name, email, joinDate: new Date().toISOString().slice(0,10) };
+        setUsers(users);
+        // auto-login
+        loginUser(username);
+      } else {
+        if (!users[username] || users[username].password !== password) {
+          alert('Invalid username or password.');
+          return;
+        }
+        loginUser(username);
+      }
+    }
+
+    function loginUser(username) {
+      currentUser = username;
+      const users = getUsers();
+      const userData = users[username];
+      // load saved and viewed
+      savedIds = getSaved(username);
+      viewedIds = getViewed(username);
+      updateUI();
+      closeAuthModalFn();
+      showDashboard();
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      savedIds = [];
+      viewedIds = [];
+      updateUI();
+      showHome();
+    }
+
+    // ---------- UI UPDATES ----------
+    function updateUI() {
+      // user actions
+      if (isAuthenticated()) {
+        const users = getUsers();
+        const userData = users[currentUser];
+        userActions.innerHTML = `
+          <span class="hidden sm:inline text-sm font-medium dark:text-gray-300">${userData.name || currentUser}</span>
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full object-cover agent-ring cursor-pointer" id="avatarBtn" />
+        `;
+        document.getElementById('avatarBtn')?.addEventListener('click', () => showDashboard());
+      } else {
+        userActions.innerHTML = `
+          <a href="#" id="loginBtn" class="btn-primary text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-md shadow-blue-500/20 flex items-center gap-2"><i class="fas fa-user-circle"></i> <span class="hidden sm:inline">Sign in</span></a>
+        `;
+        document.getElementById('loginBtn')?.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('login'); });
+      }
+      // if not logged in, hide recently viewed
+      if (!isAuthenticated()) {
+        recentlyViewedSection.classList.add('hidden');
+      } else {
+        recentlyViewedSection.classList.remove('hidden');
+        renderRecentlyViewed();
+      }
+      // re-render listings (to update heart icons)
+      const currentType = tabBuy.classList.contains('tab-active') ? 'buy' : 'rent';
+      renderListings(currentType);
+      // update dashboard if visible
+      if (dashboardView.classList.contains('active')) {
+        updateDashboard();
+      }
+    }
+
+    // ---------- RENDER LISTINGS ----------
+    function renderListings(type) {
+      const listings = getListingsByType(type);
+      listingGrid.innerHTML = '';
+      listings.forEach(item => {
+        const isSaved = isAuthenticated() && savedIds.includes(item.id);
+        const card = document.createElement('div');
+        card.className = 'bg-white dark:bg-darkcard rounded-2xl overflow-hidden shadow-soft card-hover';
+        card.innerHTML = `
+          <div class="relative h-56 img-cover" style="background-image: url('${item.img}');">
+            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-white/10"><i class="fas fa-tag mr-1.5"></i> ${item.badge}</span>
+            <button class="heart-btn absolute top-4 right-4 w-9 h-9 bg-white dark:bg-darkcard rounded-full flex items-center justify-center text-[#b0b9c9] hover:text-red-500 transition shadow-lg" data-id="${item.id}">
+              <i class="${isSaved ? 'fas' : 'far'} fa-heart ${isSaved ? 'text-red-500' : ''}"></i>
+            </button>
+            <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/20 to-transparent"></div>
+          </div>
+          <div class="p-5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-2xl font-bold text-[#0b1d3a] dark:text-white">${item.price} <span class="text-sm font-normal text-[#5a6e8a] dark:text-gray-400 ml-1">${item.change}</span></span>
+              <span class="text-xs bg-[#eef5ff] dark:bg-[#1e293b] text-primary px-2.5 py-1 rounded-full font-medium"><i class="far fa-clock mr-1"></i> ${Math.floor(Math.random()*10)+1} days</span>
+            </div>
+            <p class="font-semibold text-[#1f334f] dark:text-gray-200 mt-1.5 truncate">${item.address}</p>
+            <div class="flex gap-4 text-sm text-[#3d526f] dark:text-gray-400 mt-2"><span><i class="fas fa-bed text-primary w-4"></i> ${item.beds}</span><span><i class="fas fa-bath text-primary w-4"></i> ${item.baths}</span><span><i class="fas fa-vector-square text-primary w-4"></i> ${item.sqft} sqft</span></div>
+            <div class="flex flex-wrap gap-3 text-xs text-[#3f5679] dark:text-gray-400 mt-1.5"><span><i class="fas fa-calendar-alt text-primary w-4"></i> Built ${item.built}</span></div>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-[#eef2f6] dark:border-[#334155]">
+              <div class="flex items-center gap-2.5">
+                <img src="${item.agentImg}" class="w-9 h-9 rounded-full object-cover agent-ring" alt="agent" />
+                <div><p class="text-sm font-semibold text-[#1a2a4a] dark:text-gray-200">${item.agent}</p><p class="text-[10px] text-[#6b7e9b] dark:text-gray-400">${type === 'buy' ? 'Premier agent' : 'Rental specialist'}</p></div>
+              </div>
+              <div class="text-xs text-[#4d637f] dark:text-gray-400"><i class="fas fa-home text-primary mr-1"></i> ${type === 'buy' ? 'Single family' : 'Apartment'}</div>
+            </div>
+          </div>
+        `;
+        listingGrid.appendChild(card);
+      });
+
+      // attach heart listeners
+      document.querySelectorAll('.heart-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!isAuthenticated()) {
+            openAuthModal('login');
+            return;
+          }
+          const id = parseInt(this.dataset.id);
+          toggleSaved(id);
+        });
+      });
+
+      // click on card -> add to viewed (if logged in)
+      document.querySelectorAll('.card-hover').forEach((card, index) => {
+        card.addEventListener('click', function(e) {
+          if (e.target.closest('.heart-btn')) return;
+          const listing = listings[index];
+          if (listing && isAuthenticated()) {
+            addViewed(listing.id);
+          }
+        });
+      });
+    }
+
+    // ---------- SAVED / VIEWED ----------
+    function toggleSaved(id) {
+      if (!isAuthenticated()) return;
+      const idx = savedIds.indexOf(id);
+      if (idx > -1) {
+        savedIds.splice(idx, 1);
+      } else {
+        savedIds.push(id);
+      }
+      setSaved(currentUser, savedIds);
+      updateUI();
+      if (dashboardView.classList.contains('active')) updateDashboard();
+    }
+
+    function addViewed(id) {
+      if (!isAuthenticated()) return;
+      // remove if exists
+      const idx = viewedIds.indexOf(id);
+      if (idx > -1) viewedIds.splice(idx, 1);
+      viewedIds.unshift(id);
+      if (viewedIds.length > 10) viewedIds.pop();
+      setViewed(currentUser, viewedIds);
+      updateUI();
+      if (dashboardView.classList.contains('active')) updateDashboard();
+    }
+
+    function renderRecentlyViewed() {
+      if (!isAuthenticated()) { recentlyViewedSection.classList.add('hidden'); return; }
+      recentlyViewedSection.classList.remove('hidden');
+      const recent = viewedIds.map(id => getListingById(id)).filter(Boolean);
+      recentlyViewedGrid.innerHTML = '';
+      if (recent.length === 0) {
+        recentlyViewedGrid.innerHTML = '<p class="text-center text-[#5a6e8a] dark:text-gray-400 py-4 col-span-full">No recent views.</p>';
+        return;
+      }
+      recent.slice(0, 4).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'bg-white dark:bg-darkcard rounded-xl overflow-hidden shadow-soft border border-[#edf2f7] dark:border-[#334155] card-hover';
+        div.innerHTML = `
+          <div class="h-32 img-cover" style="background-image: url('${item.img}');"></div>
+          <div class="p-3">
+            <p class="font-semibold text-sm dark:text-white truncate">${item.address}</p>
+            <p class="text-primary font-bold text-sm">${item.price}</p>
+          </div>
+        `;
+        recentlyViewedGrid.appendChild(div);
+      });
+    }
+
+    // ---------- DASHBOARD ----------
+    function updateDashboard() {
+      if (!isAuthenticated()) return;
+      const users = getUsers();
+      const userData = users[currentUser];
+      dashboardName.innerText = userData.name || currentUser;
+      dashboardEmail.innerText = userData.email || `${currentUser}@example.com`;
+      joinDate.innerText = userData.joinDate || 'Jan 2025';
+      welcomeName.innerText = userData.name || currentUser;
+
+      // saved
+      const savedListings = savedIds.map(id => getListingById(id)).filter(Boolean);
+      savedCount.innerText = savedListings.length;
+      savedListingsGrid.innerHTML = '';
+      if (savedListings.length === 0) {
+        noSavedMsg.classList.remove('hidden');
+      } else {
+        noSavedMsg.classList.add('hidden');
+        savedListings.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'bg-white dark:bg-darkcard rounded-xl overflow-hidden shadow-soft border border-[#edf2f7] dark:border-[#334155] card-hover';
+          div.innerHTML = `
+            <div class="h-40 img-cover" style="background-image: url('${item.img}');"></div>
+            <div class="p-3">
+              <p class="font-semibold text-sm dark:text-white truncate">${item.address}</p>
+              <p class="text-primary font-bold text-sm">${item.price}</p>
+            </div>
+          `;
+          savedListingsGrid.appendChild(div);
+        });
+      }
+
+      // viewed
+      const recentViewed = viewedIds.map(id => getListingById(id)).filter(Boolean);
+      viewedCount.innerText = recentViewed.length;
+      dashRecentlyViewedGrid.innerHTML = '';
+      if (recentViewed.length === 0) {
+        noViewedMsg.classList.remove('hidden');
+      } else {
+        noViewedMsg.classList.add('hidden');
+        recentViewed.slice(0, 6).forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'bg-white dark:bg-darkcard rounded-xl overflow-hidden shadow-soft border border-[#edf2f7] dark:border-[#334155] card-hover';
+          div.innerHTML = `
+            <div class="h-32 img-cover" style="background-image: url('${item.img}');"></div>
+            <div class="p-3">
+              <p class="font-semibold text-sm dark:text-white truncate">${item.address}</p>
+              <p class="text-primary font-bold text-sm">${item.price}</p>
+            </div>
+          `;
+          dashRecentlyViewedGrid.appendChild(div);
+        });
+      }
+    }
+
+    // ---------- VIEW SWITCHING ----------
+    function showHome() {
+      homeView.classList.add('active');
+      dashboardView.classList.remove('active');
+      renderListings(tabBuy.classList.contains('tab-active') ? 'buy' : 'rent');
+      renderRecentlyViewed();
+      updateUI();
+    }
+
+    function showDashboard() {
+      if (!isAuthenticated()) { openAuthModal('login'); return; }
+      homeView.classList.remove('active');
+      dashboardView.classList.add('active');
+      updateDashboard();
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    // Tab switching
+    tabBuy.addEventListener('click', function() {
+      this.className = 'tab-active px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      tabRent.className = 'tab-inactive px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      listingTitle.innerText = 'Homes for sale';
+      renderListings('buy');
+    });
+    tabRent.addEventListener('click', function() {
+      this.className = 'tab-active px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      tabBuy.className = 'tab-inactive px-5 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2';
+      listingTitle.innerText = 'Rental properties';
+      renderListings('rent');
+    });
+
+    // Auth modal
+    document.querySelectorAll('#loginBtn, #avatarBtn').forEach(el => el?.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('login'); }));
+    closeAuthModal.addEventListener('click', closeAuthModalFn);
+    authModal.addEventListener('click', (e) => { if (e.target === authModal) closeAuthModalFn(); });
+    authToggleLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isLogin = signupFields.classList.contains('hidden');
+      openAuthModal(isLogin ? 'signup' : 'login');
+    });
+    authForm.addEventListener('submit', handleAuthSubmit);
+
+    // Logout
+    logoutBtn.addEventListener('click', (e) => { e.preventDefault(); logoutUser(); });
+
+    // Mortgage calculator
+    const calcBtn = document.getElementById('calcBtn');
+    const calcPanel = document.getElementById('calcPanel');
+    const closeCalc = document.getElementById('closeCalc');
+    const homePrice = document.getElementById('homePrice');
+    const downPayment = document.getElementById('downPayment');
+    const interestRate = document.getElementById('interestRate');
+    const monthlyPayment = document.getElementById('monthlyPayment');
+
+    function updateMortgage() {
+      const price = parseFloat(homePrice.value) || 450000;
+      const down = parseFloat(downPayment.value) || 20;
+      const rate = parseFloat(interestRate.value) || 6.8;
+      const loanAmount = price * (1 - down / 100);
+      const monthlyRate = rate / 100 / 12;
+      const months = 30 * 12;
+      if (monthlyRate === 0) { monthlyPayment.innerText = '$' + (loanAmount / months).toFixed(0); return; }
+      const x = Math.pow(1 + monthlyRate, months);
+      const payment = loanAmount * monthlyRate * x / (x - 1);
+      monthlyPayment.innerText = '$' + payment.toFixed(0);
+    }
+
+    calcBtn.addEventListener('click', (e) => { e.preventDefault(); calcPanel.classList.toggle('hidden'); updateMortgage(); });
+    closeCalc.addEventListener('click', () => calcPanel.classList.add('hidden'));
+    homePrice.addEventListener('input', updateMortgage);
+    downPayment.addEventListener('input', updateMortgage);
+    interestRate.addEventListener('input', updateMortgage);
+
+    // Dark mode toggle
+    const darkToggle = document.getElementById('darkToggle');
+    darkToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+
+    // Search demo
+    document.querySelector('.hero-gradient button')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const input = document.querySelector('.hero-gradient input');
+      alert(`🔍 Searching for "${input?.value || 'properties'}" — showing live results.`);
+    });
+    document.querySelector('a[href="#"] .fa-calculator')?.closest('a')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      calcPanel.classList.remove('hidden');
+      updateMortgage();
+    });
+
+    // Initial render
+    renderListings('buy');
+    // Check if user already logged in (session)
+    const savedUser = getFromLocal('aether_currentUser');
+    if (savedUser && getUsers()[savedUser]) {
+      currentUser = savedUser;
+      savedIds = getSaved(currentUser);
+      viewedIds = getViewed(currentUser);
+      updateUI();
+      // stay on home by default
+    }
+    // If user is logged in, show recently viewed
+    if (isAuthenticated()) {
+      recentlyViewedSection.classList.remove('hidden');
+      renderRecentlyViewed();
+    }
+    // Also update userActions
+    updateUI();
+
+    // expose logout from dashboard
+    window.showDashboard = showDashboard;
+    window.showHome = showHome;
+  })();
+</script>
+</body>
+</html>
