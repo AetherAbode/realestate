@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>AetherAbode · Ultimate Real Estate</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    /* premium polish */
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f4f6f9; transition: background 0.3s, color 0.3s; }
+    .glass-nav { background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .dark .glass-nav { background: rgba(15,23,42,0.92); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .card-hover { transition: all 0.25s cubic-bezier(0.2, 0, 0, 1); border: 1px solid #edf2f7; }
+    .dark .card-hover { border-color: #334155; background: #1e293b; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 30px -10px rgba(0,20,50,0.15); }
+    .dark .card-hover:hover { box-shadow: 0 20px 30px -10px rgba(0,0,0,0.5); }
+    .btn-primary { background: #006aff; transition: 0.15s; }
+    .btn-primary:hover { background: #004bb5; transform: scale(1.02); }
+    .img-cover { background-size: cover; background-position: center; }
+    .agent-ring { box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(0,106,255,0.12); }
+    .gradient-text { background: linear-gradient(145deg, #0b1d3a, #1f3d6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .dark .gradient-text { background: linear-gradient(145deg, #a5c9ff, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tab-active { border-bottom: 3px solid #006aff; color: #006aff; font-weight: 600; }
+    .tab-inactive { color: #4d637f; border-bottom: 3px solid transparent; }
+    .dark .tab-inactive { color: #94a3b8; }
+    .modal-overlay { background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); }
+    #mobileMenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    #mobileMenu.open { max-height: 500px; }
+    .footer-link { transition: 0.15s; }
+    .footer-link:hover { color: white; padding-left: 4px; }
+    .dark .footer-link:hover { color: #60a5fa; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .leaflet-container { border-radius: 12px; border: 1px solid #e4e7ec; }
+    .dark .leaflet-container { border-color: #334155; background: #1e293b; }
+    /* filter panel */
+    .filter-panel { transition: max-height 0.3s ease; }
+    .filter-panel.closed { max-height: 0; overflow: hidden; }
+    .filter-panel.open { max-height: 600px; }
+    /* detail modal */
+    .detail-modal { transition: opacity 0.2s; }
+    .detail-modal.hidden { display: none; opacity: 0; }
+    .detail-modal:not(.hidden) { display: flex; opacity: 1; }
+    /* scroll */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c1c9d6; border-radius: 8px; }
+    .dark ::-webkit-scrollbar-track { background: #1e293b; }
+    .dark ::-webkit-scrollbar-thumb { background: #475569; }
+  </style>
+</head>
+<body class="bg-[#f4f6f9] text-[#0b1d3a] dark:bg-darkbg dark:text-gray-200">
+
+<!-- ========== TOP NAV ========== -->
+<header class="glass-nav sticky top-0 z-50 transition-colors">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+      <!-- logo -->
+      <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="showHome()">
+        <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-blue-500/20">A</div>
+        <span class="text-2xl font-bold tracking-tight gradient-text">Aether<span class="text-primary">Abode</span></span>
+      </div>
+      <!-- nav links (desktop) -->
+      <nav class="hidden lg:flex items-center gap-6 font-medium text-[#2d3e5f] dark:text-gray-300">
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-home text-primary"></i> Buy</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-key text-primary"></i> Rent</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-chart-line text-primary"></i> Sell</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-user-tie text-primary"></i> Agent Finder</a>
+        <a href="#" class="flex items-center gap-2 hover:text-primary transition border-b-2 border-transparent hover:border-primary pb-1"><i class="fas fa-home text-primary"></i> Manage Rentals</a>
+      </nav>
+      <!-- right actions -->
+      <div class="flex items-center gap-3 sm:gap-5">
+        <button id="darkToggle" class="text-[#2d3e5f] dark:text-gray-300 hover:text-primary transition text-lg"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:inline"></i></button>
+        <button id="notifBtn" class="hidden sm:inline-flex text-[#2d3e5f] dark:text-gray-300 hover:text-primary transition text-lg relative"><i class="far fa-bell"></i><span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-[10px] text-white rounded-full flex items-center justify-center">3</span></button>
+        <div id="userActions" class="flex items-center gap-2"></div>
+        <button id="menuToggle" class="lg:hidden text-[#2d3e5f] dark:text-gray-300 hover:text-primary text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+    <!-- mobile nav -->
+    <div id="mobileMenu" class="lg:hidden bg-white/95 dark:bg-darkbg/95 backdrop-blur-sm border-t border-[#e4e7ec] dark:border-[#334155]">
+      <div class="flex flex-col py-4 space-y-3 text-[#2d3e5f] dark:text-gray-300 font-medium">
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-home text-primary w-6"></i> Buy</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-key text-primary w-6"></i> Rent</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-chart-line text-primary w-6"></i> Sell</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-user-tie text-primary w-6"></i> Agent Finder</a>
+        <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] rounded-lg"><i class="fas fa-home text-primary w-6"></i> Manage Rentals</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== APP CONTAINER ========== -->
+<div id="app">
+
+  <!-- ====== HOME VIEW ====== -->
+  <div id="homeView" class="view active">
+    <!-- HERO + SEARCH with filters -->
+    <section class="bg-gradient-to-b from-[#eef4ff] to-[#f5f7fb] dark:from-[#0f172a] dark:to-[#1e293b] px-4 py-8 md:py-12 relative transition-colors">
+      <div class="max-w-5xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-[#0b1d3a] dark:text-white">Find your <span class="text-primary">perfect</span> place</h1>
+        <p class="text-base sm:text-lg text-[#3d526f] dark:text-gray-300 max-w-2xl mx-auto mt-2">Search millions of homes with real-time map and insights.</p>
+        <!-- search bar with filter toggle -->
+        <div class="flex flex-col sm:flex-row bg-white dark:bg-darkcard rounded-2xl shadow-2xl shadow-blue-500/10 border border-white/80 dark:border-gray-700 p-1.5 max-w-3xl mx-auto mt-6">
+          <div class="flex-1 flex items-center px-4 py-1.5">
+            <i class="fas fa-search text-primary opacity-70 mr-3"></i>
+            <input type="text" id="searchInput" placeholder="📍 Address, city, or ZIP" value="Austin, TX" class="w-full py-3 outline-none bg-transparent text-[#1a2a4a] dark:text-gray-200 font-medium placeholder-[#9aabc0] dark:placeholder-gray-500 rounded-xl" />
+          </div>
+          <button id="searchBtn" class="btn-primary text-white font-semibold px-8 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"><i class="fas fa-arrow-right"></i> Search</button>
+        </div>
+        <!-- filter toggle -->
+        <button id="filterToggle" class="mt-4 text-sm text-primary font-semibold hover:underline flex items-center gap-2 mx-auto"><i class="fas fa-sliders-h"></i> Advanced filters</button>
+      </div>
+    </section>
+
+    <!-- FILTER PANEL (expandable) -->
+    <div id="filterPanel" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 filter-panel closed">
+      <div class="bg-white dark:bg-darkcard rounded-2xl shadow-md border border-[#e4e7ec] dark:border-[#334155] p-6 mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Min Price</label><input type="number" id="minPrice" placeholder="Any" class="w-full mt-1 px-3 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white" /></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Max Price</label><input type="number" id="maxPrice" placeholder="Any" class="w-full mt-1 px-3 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white" /></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Beds</label><select id="filterBeds" class="w-full mt-1 px-3 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Baths</label><select id="filterBaths" class="w-full mt-1 px-3 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white"><option value="">Any</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>4+</option></select></div>
+        <div class="flex items-end"><button id="applyFiltersBtn" class="btn-primary text-white px-6 py-2 rounded-xl w-full font-semibold">Apply</button></div>
+      </div>
+    </div>
+
+    <!-- MAIN: Map + Listings (split) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- MAP (left) -->
+        <div class="lg:w-1/2 h-[500px] lg:h-[600px] sticky top-24">
+          <div id="map" class="w-full h-full rounded-xl shadow-soft border border-[#e4e7ec] dark:border-[#334155]"></div>
+        </div>
+        <!-- LISTINGS (right) -->
+        <div class="lg:w-1/2">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold dark:text-white"><span id="listingCount">0</span> properties</h2>
+            <div class="flex gap-2 text-sm">
+              <button class="px-3 py-1 rounded-full bg-primary text-white">List</button>
+              <button class="px-3 py-1 rounded-full bg-gray-200 dark:bg-[#334155] text-[#4d637f] dark:text-gray-400">Map</button>
+            </div>
+          </div>
+          <div id="listingGrid" class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            <!-- cards injected -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extra: Explore Markets, Trends, Agents (kept from before) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Markets, Trends, Agents can be placed here if desired, but we keep it clean -->
+    </div>
+  </div>
+
+  <!-- ====== DASHBOARD VIEW ====== -->
+  <div id="dashboardView" class="view">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 sticky top-24">
+            <div class="flex flex-col items-center text-center">
+              <img id="dashboardAvatar" src="https://randomuser.me/api/portraits/men/32.jpg" class="w-24 h-24 rounded-full object-cover agent-ring mb-3" alt="user" />
+              <h3 id="dashboardName" class="text-xl font-bold dark:text-white">User</h3>
+              <p id="dashboardEmail" class="text-sm text-[#5a6e8a] dark:text-gray-400">user@example.com</p>
+              <p class="text-xs text-[#5a6e8a] dark:text-gray-400 mt-1">Joined <span id="joinDate">Jan 2025</span></p>
+              <hr class="w-full my-4 border-[#edf2f7] dark:border-[#334155]" />
+              <nav class="w-full text-left text-sm font-medium text-[#2d3e5f] dark:text-gray-300 space-y-2">
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20"><i class="fas fa-th-large w-5"></i> Dashboard</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-heart w-5"></i> Saved homes</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-clock w-5"></i> Recently viewed</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-search w-5"></i> Saved searches</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#f0f4fe] dark:hover:bg-[#1e293b] transition"><i class="fas fa-cog w-5"></i> Settings</a>
+                <a href="#" id="logoutBtn" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition"><i class="fas fa-sign-out-alt w-5"></i> Logout</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <!-- Main content -->
+        <div class="lg:col-span-3 space-y-8">
+          <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6">
+            <h2 class="text-2xl font-bold dark:text-white">Welcome back, <span id="welcomeName">User</span>!</h2>
+            <p class="text-[#5a6e8a] dark:text-gray-400">Here's your real estate activity summary.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 text-center"><i class="fas fa-heart text-3xl text-primary"></i><h3 class="text-2xl font-bold dark:text-white mt-2" id="savedCount">0</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Saved homes</p></div>
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 text-center"><i class="fas fa-eye text-3xl text-primary"></i><h3 class="text-2xl font-bold dark:text-white mt-2" id="viewedCount">0</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Recently viewed</p></div>
+            <div class="bg-white dark:bg-darkcard rounded-2xl shadow-soft border border-[#edf2f7] dark:border-[#334155] p-6 text-center"><i class="fas fa-search text-3xl text-primary"></i><h3 class="text-2xl font-bold dark:text-white mt-2" id="savedSearchesCount">0</h3><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Saved searches</p></div>
+          </div>
+          <!-- Saved Listings -->
+          <div>
+            <h3 class="text-xl font-bold dark:text-white flex items-center gap-2"><i class="fas fa-heart text-primary"></i> Your saved homes</h3>
+            <div id="savedListingsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"></div>
+            <p id="noSavedMsg" class="text-center text-[#5a6e8a] dark:text-gray-400 py-8 hidden">You haven't saved any homes yet.</p>
+          </div>
+          <!-- Recently viewed -->
+          <div>
+            <h3 class="text-xl font-bold dark:text-white flex items-center gap-2"><i class="fas fa-clock text-primary"></i> Recently viewed</h3>
+            <div id="dashRecentlyViewedGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"></div>
+            <p id="noViewedMsg" class="text-center text-[#5a6e8a] dark:text-gray-400 py-8 hidden">No recent views.</p>
+          </div>
+          <!-- Saved Searches -->
+          <div>
+            <h3 class="text-xl font-bold dark:text-white flex items-center gap-2"><i class="fas fa-search text-primary"></i> Saved searches</h3>
+            <div id="savedSearchesList" class="space-y-2 mt-4"></div>
+            <p id="noSearchesMsg" class="text-center text-[#5a6e8a] dark:text-gray-400 py-8 hidden">No saved searches. Try searching and save the criteria!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== PROPERTY DETAIL MODAL ========== -->
+<div id="detailModal" class="fixed inset-0 z-50 modal-overlay hidden detail-modal items-center justify-center p-4">
+  <div class="bg-white dark:bg-darkcard rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+    <button id="closeDetail" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl"><i class="fas fa-times"></i></button>
+    <div id="detailContent" class="p-6">
+      <!-- dynamic content -->
+    </div>
+  </div>
+</div>
+
+<!-- ========== AUTH MODAL ========== -->
+<div id="authModal" class="fixed inset-0 z-50 modal-overlay hidden items-center justify-center p-4">
+  <div class="bg-white dark:bg-darkcard rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+    <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fas fa-times text-xl"></i></button>
+    <div class="text-center mb-6">
+      <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fas fa-user-circle text-4xl text-primary"></i></div>
+      <h3 id="authTitle" class="text-2xl font-bold dark:text-white">Sign in</h3>
+      <p id="authSubtitle" class="text-sm text-[#5a6e8a] dark:text-gray-400">Welcome back!</p>
+    </div>
+    <form id="authForm">
+      <div id="signupFields" class="hidden space-y-4">
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Full name</label><input type="text" id="signupName" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary outline-none" placeholder="John Doe" /></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Email</label><input type="email" id="signupEmail" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary outline-none" placeholder="you@example.com" /></div>
+      </div>
+      <div class="space-y-4">
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Username</label><input type="text" id="authUsername" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary outline-none" placeholder="username" required /></div>
+        <div><label class="block text-sm font-medium text-[#2d3e5f] dark:text-gray-300">Password</label><input type="password" id="authPassword" class="w-full mt-1 px-4 py-2 border border-[#e4e7ec] dark:border-[#334155] rounded-xl bg-white dark:bg-darkbg text-[#0b1d3a] dark:text-white focus:ring-2 focus:ring-primary outline-none" placeholder="••••••••" required /></div>
+      </div>
+      <button type="submit" class="btn-primary w-full text-white font-semibold py-3 rounded-xl mt-6 transition">Sign in</button>
+      <p class="text-center text-sm text-[#5a6e8a] dark:text-gray-400 mt-4">
+        <span id="authToggleText">Don't have an account?</span>
+        <a href="#" id="authToggleLink" class="text-primary font-semibold hover:underline">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-[#0b1a2f] dark:bg-[#0f172a] text-[#cbd5e1] pt-12 pb-6 mt-10 border-t border-[#1f3a5f] dark:border-[#1e293b]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-[#7f96b3] dark:text-gray-500">
+    <p><i class="fas fa-copyright mr-1.5"></i> 2026 AetherAbode Real Estate · Data sourced from local MLS · All rights reserved</p>
+  </div>
+</footer>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+  (function() {
+    // ---------- DATA ----------
+    const cities = ['Austin', 'Los Angeles', 'Miami', 'Denver', 'Seattle', 'New York'];
+    const streetNames = ['Parkview Dr', 'Cliffside Ln', 'Bay Harbor Dr', 'Aspen Ridge', 'Cherry St', 'Bel Air Rd', 'Ocean Ave', 'High St', 'Pearl St'];
+    const images = [
+      'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600',
+      'https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg?auto=compress&cs=tinysrgb&w=600',
+      'https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=600',
+      'https://images.pexels.com/photos/280221/pexels-photo-280221.jpeg?auto=compress&cs=tinysrgb&w=600',
+      'https://images.pexels.com/photos/280219/pexels-photo-280219.jpeg?auto=compress&cs=tinysrgb&w=600',
+      'https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=600'
+    ];
+    const agentNames = ['Elena V.', 'Marcus L.', 'Derek P.', 'Nina R.', 'James C.', 'Sophia K.', 'Emily R.', 'Tom H.', 'Luis G.'];
+    const agentImgs = [
+      'https://randomuser.me/api/portraits/women/44.jpg',
+      'https://randomuser.me/api/portraits/men/32.jpg',
+      'https://randomuser.me/api/portraits/men/75.jpg',
+      'https://randomuser.me/api/portraits/women/21.jpg',
+      'https://randomuser.me/api/portraits/men/52.jpg',
+      'https://randomuser.me/api/portraits/women/68.jpg',
+      'https://randomuser.me/api/portraits/women/33.jpg',
+      'https://randomuser.me/api/portraits/men/45.jpg',
+      'https://randomuser.me/api/portraits/men/22.jpg'
+    ];
+    const badges = ['For sale', 'Open house', 'New', 'Featured', 'Virtual tour', 'Just listed', 'Available now'];
+
+    // generate 20 listings with realistic coordinates (approx US)
+    function generateListings(count = 24) {
+      const listings = [];
+      for (let i = 0; i < count; i++) {
+        const city = cities[Math.floor(Math.random() * cities.length)];
+        const price = (Math.floor(Math.random() * 1500) + 300) * 1000;
+        const priceStr = '$' + price.toLocaleString();
+        const change = (Math.random() * 10 + 1).toFixed(1);
+        const beds = Math.floor(Math.random() * 5) + 1;
+        const baths = beds - 0.5 + Math.floor(Math.random() * 2) * 0.5;
+        const sqft = Math.floor(Math.random() * 4000) + 1000;
+        const built = Math.floor(Math.random() * 30) + 1990;
+        const agent = agentNames[Math.floor(Math.random() * agentNames.length)];
+        const agentImg = agentImgs[Math.floor(Math.random() * agentImgs.length)];
+        const badge = badges[Math.floor(Math.random() * badges.length)];
+        const img = images[Math.floor(Math.random() * images.length)];
+        const lat = 30 + (Math.random() - 0.5) * 10; // roughly US
+        const lng = -98 + (Math.random() - 0.5) * 10;
+        listings.push({
+          id: i + 1,
+          img,
+          price: priceStr,
+          change: '+' + change + '%',
+          address: `${Math.floor(Math.random() * 9000) + 100} ${streetNames[Math.floor(Math.random() * streetNames.length)]}, ${city}, ${['TX','CA','FL','CO','WA','NY'][Math.floor(Math.random()*6)]} ${Math.floor(Math.random()*90000)+10000}`,
+          beds,
+          baths,
+          sqft,
+          built,
+          agent,
+          agentImg,
+          badge,
+          type: Math.random() > 0.2 ? 'buy' : 'rent',
+          lat,
+          lng,
+        });
+      }
+      return listings;
+    }
+
+    const allListings = generateListings(24);
+
+    // ---------- STATE ----------
+    let currentUser = null;
+    let savedIds = [];
+    let viewedIds = [];
+    let savedSearches = [];
+    let map = null;
+    let mapMarkers = [];
+    let currentListings = [...allListings];
+
+    // ---------- DOM REFS ----------
+    const homeView = document.getElementById('homeView');
+    const dashboardView = document.getElementById('dashboardView');
+    const userActions = document.getElementById('userActions');
+    const authModal = document.getElementById('authModal');
+    const closeAuthModal = document.getElementById('closeAuthModal');
+    const authForm = document.getElementById('authForm');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const authToggleLink = document.getElementById('authToggleLink');
+    const authToggleText = document.getElementById('authToggleText');
+    const signupFields = document.getElementById('signupFields');
+    const authUsername = document.getElementById('authUsername');
+    const authPassword = document.getElementById('authPassword');
+    const signupName = document.getElementById('signupName');
+    const signupEmail = document.getElementById('signupEmail');
+    const listingGrid = document.getElementById('listingGrid');
+    const listingCount = document.getElementById('listingCount');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const filterToggle = document.getElementById('filterToggle');
+    const filterPanel = document.getElementById('filterPanel');
+    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const filterBeds = document.getElementById('filterBeds');
+    const filterBaths = document.getElementById('filterBaths');
+    const detailModal = document.getElementById('detailModal');
+    const closeDetail = document.getElementById('closeDetail');
+    const detailContent = document.getElementById('detailContent');
+    const savedListingsGrid = document.getElementById('savedListingsGrid');
+    const dashRecentlyViewedGrid = document.getElementById('dashRecentlyViewedGrid');
+    const savedSearchesList = document.getElementById('savedSearchesList');
+    const savedCount = document.getElementById('savedCount');
+    const viewedCount = document.getElementById('viewedCount');
+    const savedSearchesCount = document.getElementById('savedSearchesCount');
+    const noSavedMsg = document.getElementById('noSavedMsg');
+    const noViewedMsg = document.getElementById('noViewedMsg');
+    const noSearchesMsg = document.getElementById('noSearchesMsg');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const dashboardName = document.getElementById('dashboardName');
+    const dashboardEmail = document.getElementById('dashboardEmail');
+    const joinDate = document.getElementById('joinDate');
+    const welcomeName = document.getElementById('welcomeName');
+
+    // ---------- UTILITY ----------
+    function getListingsByType(type) {
+      return currentListings.filter(l => l.type === type);
+    }
+
+    function getListingById(id) {
+      return allListings.find(l => l.id === id);
+    }
+
+    function saveToLocal(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function getFromLocal(key) {
+      const val = localStorage.getItem(key);
+      return val ? JSON.parse(val) : null;
+    }
+
+    function getUsers() {
+      return getFromLocal('aether_users') || {};
+    }
+
+    function setUsers(users) {
+      saveToLocal('aether_users', users);
+    }
+
+    function getSaved(username) {
+      const all = getFromLocal('aether_saved') || {};
+      return all[username] || [];
+    }
+
+    function setSaved(username, ids) {
+      const all = getFromLocal('aether_saved') || {};
+      all[username] = ids;
+      saveToLocal('aether_saved', all);
+    }
+
+    function getViewed(username) {
+      const all = getFromLocal('aether_viewed') || {};
+      return all[username] || [];
+    }
+
+    function setViewed(username, ids) {
+      const all = getFromLocal('aether_viewed') || {};
+      all[username] = ids;
+      saveToLocal('aether_viewed', all);
+    }
+
+    function getSearches(username) {
+      const all = getFromLocal('aether_searches') || {};
+      return all[username] || [];
+    }
+
+    function setSearches(username, searches) {
+      const all = getFromLocal('aether_searches') || {};
+      all[username] = searches;
+      saveToLocal('aether_searches', all);
+    }
+
+    function isAuthenticated() {
+      return currentUser !== null;
+    }
+
+    // ---------- AUTH ----------
+    function openAuthModal(mode = 'login') {
+      authModal.classList.remove('hidden');
+      authModal.style.display = 'flex';
+      if (mode === 'login') {
+        authTitle.innerText = 'Sign in';
+        authSubtitle.innerText = 'Welcome back! Enter your credentials.';
+        signupFields.classList.add('hidden');
+        authToggleText.innerText = "Don't have an account?";
+        authToggleLink.innerText = 'Sign up';
+        authForm.querySelector('button[type="submit"]').innerText = 'Sign in';
+      } else {
+        authTitle.innerText = 'Create account';
+        authSubtitle.innerText = 'Join AetherAbode and start saving homes.';
+        signupFields.classList.remove('hidden');
+        authToggleText.innerText = "Already have an account?";
+        authToggleLink.innerText = 'Sign in';
+        authForm.querySelector('button[type="submit"]').innerText = 'Sign up';
+      }
+    }
+
+    function closeAuthModalFn() {
+      authModal.classList.add('hidden');
+      authModal.style.display = 'none';
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const username = authUsername.value.trim();
+      const password = authPassword.value.trim();
+      if (!username || !password) { alert('Please fill in all fields.'); return; }
+      const users = getUsers();
+      const isSignup = !signupFields.classList.contains('hidden');
+      if (isSignup) {
+        const name = signupName.value.trim() || username;
+        const email = signupEmail.value.trim() || `${username}@example.com`;
+        if (users[username]) { alert('Username already exists.'); return; }
+        users[username] = { password, name, email, joinDate: new Date().toISOString().slice(0,10) };
+        setUsers(users);
+        loginUser(username);
+      } else {
+        if (!users[username] || users[username].password !== password) {
+          alert('Invalid username or password.');
+          return;
+        }
+        loginUser(username);
+      }
+    }
+
+    function loginUser(username) {
+      currentUser = username;
+      const users = getUsers();
+      const userData = users[username];
+      savedIds = getSaved(username);
+      viewedIds = getViewed(username);
+      savedSearches = getSearches(username);
+      updateUI();
+      closeAuthModalFn();
+      showDashboard();
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      savedIds = [];
+      viewedIds = [];
+      savedSearches = [];
+      saveToLocal('aether_currentUser', null);
+      updateUI();
+      showHome();
+    }
+
+    // ---------- MAP ----------
+    function initMap() {
+      if (map) return;
+      map = L.map('map').setView([30.267, -97.743], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      updateMapMarkers(currentListings);
+    }
+
+    function updateMapMarkers(listings) {
+      if (!map) return;
+      // clear old markers
+      mapMarkers.forEach(m => map.removeLayer(m));
+      mapMarkers = [];
+      listings.forEach(item => {
+        const marker = L.marker([item.lat, item.lng]).addTo(map);
+        marker.bindPopup(`<b>${item.address}</b><br>${item.price}<br>${item.beds} bed, ${item.baths} bath`);
+        marker.on('click', () => {
+          openDetail(item.id);
+        });
+        mapMarkers.push(marker);
+      });
+      if (listings.length > 0) {
+        const group = L.featureGroup(mapMarkers);
+        map.fitBounds(group.getBounds().pad(0.1));
+      }
+    }
+
+    // ---------- RENDER LISTINGS (list view) ----------
+    function renderListings(listings) {
+      listingGrid.innerHTML = '';
+      listingCount.innerText = listings.length;
+      if (listings.length === 0) {
+        listingGrid.innerHTML = '<p class="text-center text-[#5a6e8a] dark:text-gray-400 py-8">No properties match your criteria.</p>';
+        return;
+      }
+      listings.forEach(item => {
+        const isSaved = isAuthenticated() && savedIds.includes(item.id);
+        const card = document.createElement('div');
+        card.className = 'bg-white dark:bg-darkcard rounded-xl overflow-hidden shadow-soft border border-[#edf2f7] dark:border-[#334155] card-hover cursor-pointer';
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row">
+            <div class="sm:w-1/3 h-48 sm:h-auto img-cover" style="background-image: url('${item.img}');"></div>
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between">
+                  <span class="text-xl font-bold dark:text-white">${item.price} <span class="text-sm font-normal text-[#5a6e8a] dark:text-gray-400">${item.change}</span></span>
+                  <button class="heart-btn text-lg ${isSaved ? 'text-red-500' : 'text-[#b0b9c9]'} hover:text-red-500 transition" data-id="${item.id}"><i class="${isSaved ? 'fas' : 'far'} fa-heart"></i></button>
+                </div>
+                <p class="font-semibold dark:text-gray-200 truncate">${item.address}</p>
+                <div class="flex gap-3 text-sm text-[#3d526f] dark:text-gray-400 mt-1"><span><i class="fas fa-bed text-primary"></i> ${item.beds}</span><span><i class="fas fa-bath text-primary"></i> ${item.baths}</span><span><i class="fas fa-vector-square text-primary"></i> ${item.sqft} sqft</span></div>
+                <div class="flex gap-3 text-xs text-[#3f5679] dark:text-gray-400"><span><i class="fas fa-calendar-alt text-primary"></i> Built ${item.built}</span><span class="bg-[#eef5ff] dark:bg-[#1e293b] px-2 py-0.5 rounded-full text-primary">${item.badge}</span></div>
+              </div>
+              <div class="flex items-center justify-between mt-2 pt-2 border-t border-[#eef2f6] dark:border-[#334155]">
+                <div class="flex items-center gap-2">
+                  <img src="${item.agentImg}" class="w-7 h-7 rounded-full object-cover agent-ring" alt="agent" />
+                  <span class="text-sm font-medium dark:text-gray-200">${item.agent}</span>
+                </div>
+                <span class="text-xs text-[#4d637f] dark:text-gray-400"><i class="fas fa-home text-primary"></i> ${item.type === 'buy' ? 'Single family' : 'Apartment'}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        // click card -> detail
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.heart-btn')) return;
+          openDetail(item.id);
+          if (isAuthenticated()) addViewed(item.id);
+        });
+        listingGrid.appendChild(card);
+      });
+
+      // heart listeners
+      document.querySelectorAll('.heart-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!isAuthenticated()) { openAuthModal('login'); return; }
+          const id = parseInt(this.dataset.id);
+          toggleSaved(id);
+        });
+      });
+    }
+
+    // ---------- FILTER & SEARCH ----------
+    function applyFilters() {
+      const query = searchInput.value.toLowerCase().trim();
+      const min = parseFloat(minPrice.value) || 0;
+      const max = parseFloat(maxPrice.value) || Infinity;
+      const beds = filterBeds.value ? parseFloat(filterBeds.value) : 0;
+      const baths = filterBaths.value ? parseFloat(filterBaths.value) : 0;
+      let filtered = allListings.filter(item => {
+        const priceNum = parseFloat(item.price.replace(/[$,]/g, ''));
+        const matchPrice = priceNum >= min && priceNum <= max;
+        const matchBeds = beds === 0 || item.beds >= beds;
+        const matchBaths = baths === 0 || item.baths >= baths;
+        const matchQuery = item.address.toLowerCase().includes(query) || item.agent.toLowerCase().includes(query);
+        return matchPrice && matchBeds && matchBaths && matchQuery;
+      });
+      currentListings = filtered;
+      renderListings(currentListings);
+      updateMapMarkers(currentListings);
+      // save search if logged in (auto-save last search)
+      if (isAuthenticated()) {
+        const searchObj = { query, minPrice: min, maxPrice: max, beds, baths, timestamp: new Date().toISOString() };
+        // avoid duplicates by overwriting last search with same criteria (simplified)
+        // we'll just add to saved searches if not already present
+        const existing = savedSearches.find(s => s.query === query && s.minPrice === min && s.maxPrice === max && s.beds === beds && s.baths === baths);
+        if (!existing && (query || min > 0 || max < Infinity || beds > 0 || baths > 0)) {
+          savedSearches.push(searchObj);
+          setSearches(currentUser, savedSearches);
+          updateUI();
+        }
+      }
+    }
+
+    // ---------- DETAIL MODAL ----------
+    function openDetail(id) {
+      const item = getListingById(id);
+      if (!item) return;
+      detailContent.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="h-64 md:h-auto img-cover rounded-xl" style="background-image: url('${item.img}');"></div>
+          <div>
+            <h2 class="text-3xl font-bold dark:text-white">${item.price}</h2>
+            <p class="text-lg font-semibold dark:text-gray-200">${item.address}</p>
+            <div class="flex gap-4 mt-2 text-sm"><span><i class="fas fa-bed text-primary"></i> ${item.beds} beds</span><span><i class="fas fa-bath text-primary"></i> ${item.baths} baths</span><span><i class="fas fa-vector-square text-primary"></i> ${item.sqft} sqft</span></div>
+            <div class="mt-2 text-sm"><i class="fas fa-calendar-alt text-primary"></i> Built ${item.built}</div>
+            <div class="mt-2"><span class="bg-[#eef5ff] dark:bg-[#1e293b] px-3 py-1 rounded-full text-primary text-sm">${item.badge}</span></div>
+            <div class="mt-4 flex items-center gap-3 border-t border-[#eef2f6] dark:border-[#334155] pt-4">
+              <img src="${item.agentImg}" class="w-12 h-12 rounded-full object-cover agent-ring" alt="agent" />
+              <div><p class="font-bold dark:text-white">${item.agent}</p><p class="text-sm text-[#5a6e8a] dark:text-gray-400">Licensed real estate agent</p></div>
+            </div>
+            <button class="mt-4 btn-primary text-white px-6 py-2 rounded-full font-semibold"><i class="fas fa-envelope"></i> Contact agent</button>
+            <button class="mt-4 ml-2 border border-primary text-primary px-6 py-2 rounded-full font-semibold hover:bg-primary/10 transition"><i class="fas fa-heart"></i> Save</button>
+          </div>
+        </div>
+      `;
+      detailModal.classList.remove('hidden');
+      detailModal.style.display = 'flex';
+      // save to viewed if logged in
+      if (isAuthenticated()) addViewed(id);
+    }
+
+    function closeDetailFn() {
+      detailModal.classList.add('hidden');
+      detailModal.style.display = 'none';
+    }
+
+    // ---------- DASHBOARD ----------
+    function updateDashboard() {
+      if (!isAuthenticated()) return;
+      const users = getUsers();
+      const userData = users[currentUser];
+      dashboardName.innerText = userData.name || currentUser;
+      dashboardEmail.innerText = userData.email || `${currentUser}@example.com`;
+      joinDate.innerText = userData.joinDate || 'Jan 2025';
+      welcomeName.innerText = userData.name || currentUser;
+
+      // saved
+      const savedListings = savedIds.map(id => getListingById(id)).filter(Boolean);
+      savedCount.innerText = savedListings.length;
+      savedListingsGrid.innerHTML = '';
+      if (savedListings.length === 0) {
+        noSavedMsg.classList.remove('hidden');
+      } else {
+        noSavedMsg.classList.add('hidden');
+        savedListings.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'bg-white dark:bg-darkcard rounded-xl overflow-hidden shadow-soft border border-[#edf2f7] dark:border-[#334155] card-hover cursor-pointer';
+          div.innerHTML = `
+            <div class="h-40 img-cover" style="background-image: url('${item.img}');"></div>
+            <div class="p-3">
+              <p class="font-semibold text-sm dark:text-white truncate">${item.address}</p>
+              <p class="text-primary font-bold text-sm">${item.price}</p>
+            </div>
+          `;
+          div.addEventListener('click', () => { openDetail(item.id); });
+          savedListingsGrid.appendChild(div);
+        });
+      }
+
+      // viewed
+      const recentViewed = viewedIds.map(id => getListingById(id)).filter(Boolean);
+      viewedCount.innerText = recentViewed.length;
+      dashRecentlyViewedGrid.innerHTML = '';
+      if (recentViewed.length === 0) {
+        noViewedMsg.classList.remove('hidden');
+      } else {
+        noViewedMsg.classList.add('hidden');
+        recentViewed.slice(0, 6).forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'bg-white dark:bg-darkcard rounded-xl overflow-hidden shadow-soft border border-[#edf2f7] dark:border-[#334155] card-hover cursor-pointer';
+          div.innerHTML = `
+            <div class="h-32 img-cover" style="background-image: url('${item.img}');"></div>
+            <div class="p-3">
+              <p class="font-semibold text-sm dark:text-white truncate">${item.address}</p>
+              <p class="text-primary font-bold text-sm">${item.price}</p>
+            </div>
+          `;
+          div.addEventListener('click', () => { openDetail(item.id); });
+          dashRecentlyViewedGrid.appendChild(div);
+        });
+      }
+
+      // saved searches
+      savedSearchesCount.innerText = savedSearches.length;
+      savedSearchesList.innerHTML = '';
+      if (savedSearches.length === 0) {
+        noSearchesMsg.classList.remove('hidden');
+      } else {
+        noSearchesMsg.classList.add('hidden');
+        savedSearches.forEach((s, idx) => {
+          const div = document.createElement('div');
+          div.className = 'flex items-center justify-between bg-[#f0f4fe] dark:bg-[#1e293b] p-3 rounded-xl';
+          div.innerHTML = `
+            <div class="text-sm dark:text-gray-200">
+              <span class="font-medium">Search:</span> ${s.query || 'All'} 
+              <span class="text-[#5a6e8a] dark:text-gray-400">| $${s.minPrice || 0} - $${s.maxPrice === Infinity ? 'Any' : s.maxPrice}</span>
+              <span class="text-[#5a6e8a] dark:text-gray-400">| ${s.beds || 'Any'} beds, ${s.baths || 'Any'} baths</span>
+            </div>
+            <button class="text-primary hover:text-red-500 transition" onclick="removeSearch(${idx})"><i class="fas fa-trash-alt"></i></button>
+          `;
+          savedSearchesList.appendChild(div);
+        });
+      }
+    }
+
+    // remove search
+    window.removeSearch = function(idx) {
+      if (!isAuthenticated()) return;
+      savedSearches.splice(idx, 1);
+      setSearches(currentUser, savedSearches);
+      updateDashboard();
+    };
+
+    // ---------- SAVED / VIEWED ----------
+    function toggleSaved(id) {
+      if (!isAuthenticated()) return;
+      const idx = savedIds.indexOf(id);
+      if (idx > -1) {
+        savedIds.splice(idx, 1);
+      } else {
+        savedIds.push(id);
+      }
+      setSaved(currentUser, savedIds);
+      updateUI();
+      if (dashboardView.classList.contains('active')) updateDashboard();
+    }
+
+    function addViewed(id) {
+      if (!isAuthenticated()) return;
+      const idx = viewedIds.indexOf(id);
+      if (idx > -1) viewedIds.splice(idx, 1);
+      viewedIds.unshift(id);
+      if (viewedIds.length > 20) viewedIds.pop();
+      setViewed(currentUser, viewedIds);
+      if (dashboardView.classList.contains('active')) updateDashboard();
+    }
+
+    // ---------- UI UPDATE ----------
+    function updateUI() {
+      if (isAuthenticated()) {
+        const users = getUsers();
+        const userData = users[currentUser];
+        userActions.innerHTML = `
+          <span class="hidden sm:inline text-sm font-medium dark:text-gray-300">${userData.name || currentUser}</span>
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full object-cover agent-ring cursor-pointer" id="avatarBtn" />
+        `;
+        document.getElementById('avatarBtn')?.addEventListener('click', () => showDashboard());
+        // save current user
+        saveToLocal('aether_currentUser', currentUser);
+      } else {
+        userActions.innerHTML = `
+          <a href="#" id="loginBtn" class="btn-primary text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-md shadow-blue-500/20 flex items-center gap-2"><i class="fas fa-user-circle"></i> <span class="hidden sm:inline">Sign in</span></a>
+        `;
+        document.getElementById('loginBtn')?.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('login'); });
+        saveToLocal('aether_currentUser', null);
+      }
+      // re-render listings to update hearts
+      renderListings(currentListings);
+      // update map markers
+      updateMapMarkers(currentListings);
+    }
+
+    // ---------- VIEW SWITCHING ----------
+    function showHome() {
+      homeView.classList.add('active');
+      dashboardView.classList.remove('active');
+      // re-init map if needed
+      setTimeout(initMap, 100);
+      applyFilters(); // re-apply
+    }
+
+    function showDashboard() {
+      if (!isAuthenticated()) { openAuthModal('login'); return; }
+      homeView.classList.remove('active');
+      dashboardView.classList.add('active');
+      updateDashboard();
+      // destroy map to save memory
+      if (map) { map.remove(); map = null; }
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    // Auth
+    closeAuthModal.addEventListener('click', closeAuthModalFn);
+    authModal.addEventListener('click', (e) => { if (e.target === authModal) closeAuthModalFn(); });
+    authToggleLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isLogin = signupFields.classList.contains('hidden');
+      openAuthModal(isLogin ? 'signup' : 'login');
+    });
+    authForm.addEventListener('submit', handleAuthSubmit);
+
+    // Logout
+    logoutBtn.addEventListener('click', (e) => { e.preventDefault(); logoutUser(); });
+
+    // Filter toggle
+    filterToggle.addEventListener('click', () => {
+      filterPanel.classList.toggle('closed');
+      filterPanel.classList.toggle('open');
+    });
+
+    // Search & Filter
+    searchBtn.addEventListener('click', applyFilters);
+    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
+    applyFiltersBtn.addEventListener('click', applyFilters);
+
+    // Detail modal
+    closeDetail.addEventListener('click', closeDetailFn);
+    detailModal.addEventListener('click', (e) => { if (e.target === detailModal) closeDetailFn(); });
+
+    // Dark mode
+    const darkToggle = document.getElementById('darkToggle');
+    darkToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+
+    // ---------- INIT ----------
+    // Check for existing session
+    const savedUser = getFromLocal('aether_currentUser');
+    if (savedUser && getUsers()[savedUser]) {
+      currentUser = savedUser;
+      savedIds = getSaved(currentUser);
+      viewedIds = getViewed(currentUser);
+      savedSearches = getSearches(currentUser);
+      updateUI();
+      // stay on home
+    } else {
+      currentUser = null;
+      updateUI();
+    }
+    // initial render
+    currentListings = [...allListings];
+    renderListings(currentListings);
+    setTimeout(initMap, 200);
+
+    // expose functions for global use
+    window.showHome = showHome;
+    window.showDashboard = showDashboard;
+    window.openDetail = openDetail;
+    window.closeDetail = closeDetailFn;
+    window.toggleSaved = toggleSaved;
+    window.addViewed = addViewed;
+
+  })();
+</script>
+</body>
+</html>
